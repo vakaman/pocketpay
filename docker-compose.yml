@@ -1,0 +1,100 @@
+version: "4"
+
+volumes:
+    db:
+    cache:
+networks:
+    pocketpay:
+
+services:
+
+    webserver:
+        image: dumptec/nginx:1.21.dev
+        hostname: webserver
+        container_name: ${APP_PROJECT_NAME}-webserver
+        working_dir: /app
+        user: "dump"
+        networks:
+            - pocketpay
+        restart: "no"
+        depends_on:
+            - phpfpm
+        ports:
+            - "80:8080"
+            - "443:8443"
+        volumes:
+            - ./:/app
+            - ./docker/nginx/dev.conf:/opt/bitnami/nginx/conf/server_blocks/default.conf:ro
+
+    phpfpm:
+        image: dumptec/php-fpm:dev-8.2-latest
+        hostname: phpfpm
+        container_name: ${APP_PROJECT_NAME}-phpfpm
+        working_dir: /app
+        user: "dump"
+        dns: 1.1.1.1
+        ports:
+            - "22000:22"
+        extra_hosts:
+            - "host.docker.internal:${PHPFPM_XDEBUG_HOST_IP}"
+        networks:
+            - pocketpay
+        restart: "no"
+        volumes:
+            - ./:/app
+
+    database:
+        image: postgres:14
+        hostname: database
+        container_name: ${APP_PROJECT_NAME}-database
+        environment:
+            - POSTGRES_USER=${DB_USERNAME}
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+            - POSTGRES_DB=${DB_DATABASE}
+            - PGDATA=/var/lib/postgresql/data/pgdata
+            - PGTZ=${TIMEZONE}
+            - TZ=${TIMEZONE}
+        ports:
+            - "5432:5432"
+        networks:
+            - pocketpay
+        restart: "no"
+        volumes:
+            - db:/var/lib/postgresql/data/pgdata
+
+    mailhog:
+        image: mailhog/mailhog
+        hostname: mailhog
+        container_name: ${APP_PROJECT_NAME}-mailhog
+        restart: "no"
+        ports:
+            - ${MAILHOG_WEB_SMTP}:1025
+            - ${MAILHOG_WEB_PORT}:8025
+
+    cache:
+        image: bitnami/redis
+        hostname: cache
+        container_name: ${APP_PROJECT_NAME}-cache
+        networks:
+            - pocketpay
+        restart: "no"
+        volumes:
+            - cache:/bitnami/redis/data
+        environment:
+            - ALLOW_EMPTY_PASSWORD=no
+            - REDIS_PASSWORD=${REDIS_PASSWORD}
+            - TZ=${TIMEZONE}
+
+    redisadmin:
+        image: erikdubbelboer/phpredisadmin
+        hostname: redisadmin
+        container_name: ${APP_PROJECT_NAME}-redisadmin
+        environment:
+            - REDIS_1_HOST=${REDIS_HOST}
+            - REDIS_1_PORT=${REDIS_PORT}
+            - REDIS_1_AUTH=${REDIS_PASSWORD}
+        networks:
+            - pocketpay
+        restart: "no"
+        ports:
+            - ${REDISADMIN_WEB_PORT}:80
