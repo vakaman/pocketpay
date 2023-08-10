@@ -1,0 +1,103 @@
+version: "4"
+
+volumes:
+    pocket-notifyer-queue:
+
+networks:
+    pocket-notifyer-internal:
+    pocket-notifyer-external:
+        name: pocket-notifyer-external
+        external: true
+
+services:
+
+    pocket-notifyer-webserver:
+        image: dumptec/nginx:1.21.dev
+        hostname: pocket-notifyer-webserver
+        container_name: pocket-notifyer-webserver
+        working_dir: /app
+        user: "dump"
+        networks:
+            - pocket-notifyer-internal
+            - pocket-notifyer-external
+        restart: "no"
+        depends_on:
+            - phpfpm
+        ports:
+            - "81:8080"
+        volumes:
+            - ./pocket-notifyer:/app
+            - ./docker/pocket-notifyer/nginx/dev.conf:/opt/bitnami/nginx/conf/server_blocks/default.conf:ro
+
+    pocket-notifyer-api:
+        image: dumptec/php-fpm:dev-8.2-latest
+        hostname: pocket-notifyer-api
+        container_name: pocket-notifyer-api
+        working_dir: /app
+        user: "dump"
+        dns: 1.1.1.1
+        ports:
+            - "22001:22"
+        extra_hosts:
+            - "host.docker.internal:${PHPFPM_XDEBUG_HOST_IP}"
+        networks:
+            - pocket-notifyer-internal
+        restart: "no"
+        volumes:
+            - ./pocket-notifyer:/app
+
+    pocket-notifyer-worker:
+        image: dumptec/php-fpm:dev-8.2-latest
+        hostname: pocket-notifyer-worker
+        container_name: pocket-notifyer-worker
+        working_dir: /app
+        user: "dump"
+        dns: 1.1.1.1
+        ports:
+            - "22002:22"
+        extra_hosts:
+            - "host.docker.internal:${PHPFPM_XDEBUG_HOST_IP}"
+        networks:
+            - pocket-notifyer-internal
+        restart: "no"
+        volumes:
+            - ./pocket-notifyer:/app
+
+    pocket-notifyer-mailhog:
+        image: mailhog/mailhog
+        hostname: pocket-notifyer-mailhog
+        container_name: pocket-notifyer-mailhog
+        restart: "no"
+        networks:
+            - pocket-notifyer-internal
+        ports:
+            - ${MAILHOG_WEB_SMTP}:1025
+            - ${MAILHOG_WEB_PORT}:8025
+
+    pocket-notifyer-queue:
+        image: bitnami/redis
+        hostname: pocket-notifyer-queue
+        container_name: pocket-notifyer-queue
+        networks:
+            - pocket-notifyer-internal
+        restart: "no"
+        volumes:
+            - pocket-notifyer-queue:/bitnami/redis/data
+        environment:
+            - ALLOW_EMPTY_PASSWORD=no
+            - REDIS_PASSWORD=${REDIS_PASSWORD}
+            - TZ=${TIMEZONE}
+
+    pocket-notifyer-redisadmin:
+        image: erikdubbelboer/phpredisadmin
+        hostname: pocket-notifyer-redisadmin
+        container_name: pocket-notifyer-redisadmin
+        environment:
+            - REDIS_1_HOST=pocket-notifyer-queue
+            - REDIS_1_PORT=6379
+            - REDIS_1_AUTH=${REDIS_PASSWORD}
+        networks:
+            - pocket-notifyer-internal
+        restart: "no"
+        ports:
+            - 83:80

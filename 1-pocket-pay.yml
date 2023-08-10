@@ -1,0 +1,66 @@
+version: "4"
+
+volumes:
+    pocketpay-db:
+
+networks:
+    pocketpay-internal:
+    pocketpay-external:
+        name: pocketpay-external
+        external: true
+
+services:
+
+    pocketpay-webserver:
+        image: dumptec/nginx:1.21.dev
+        hostname: pocketpay-webserver
+        container_name: pocketpay-webserver
+        working_dir: /app
+        user: "dump"
+        networks:
+            - pocketpay-internal
+        restart: "no"
+        depends_on:
+            - phpfpm
+        ports:
+            - "80:8080"
+            - "443:8443"
+        volumes:
+            - ./pocket-pay:/app
+            - ./docker/pocket-pay/nginx/dev.conf:/opt/bitnami/nginx/conf/server_blocks/default.conf:ro
+
+    pocketpay-api:
+        image: dumptec/php-fpm:dev-8.2-latest
+        hostname: pocketpay-api
+        container_name: pocketpay-api
+        working_dir: /app
+        user: "dump"
+        dns: 1.1.1.1
+        ports:
+            - "22001:22"
+        extra_hosts:
+            - "host.docker.internal:${PHPFPM_XDEBUG_HOST_IP}"
+        networks:
+            - pocketpay-internal
+            - pocketpay-external
+        restart: "no"
+        volumes:
+            - ./pocket-pay:/app
+
+    pocketpay-database:
+        image: postgres:14
+        hostname: pocketpay-database
+        container_name: pocketpay-database
+        environment:
+            - POSTGRES_USER=${DB_USERNAME}
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+            - POSTGRES_DB=${DB_DATABASE}
+            - PGDATA=/var/lib/postgresql/data/pgdata
+            - PGTZ=${TIMEZONE}
+        ports:
+            - "5431:5432"
+        networks:
+            - pocketpay-internal
+        restart: "no"
+        volumes:
+            - pocketpay-db:/var/lib/postgresql/data/pgdata

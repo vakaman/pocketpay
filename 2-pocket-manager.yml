@@ -1,0 +1,108 @@
+version: "4"
+
+volumes:
+    pocketpay-manager-db:
+    pocketpay-manager-queue:
+
+networks:
+    pocketpay-manager-internal:
+    pocketpay-manager-external:
+        name: pocketpay-manager-external
+        external: true
+
+services:
+
+    pocketpay-manager-webserver:
+        image: dumptec/nginx:1.21.dev
+        hostname: pocketpay-manager-webserver
+        container_name: pocketpay-manager-webserver
+        working_dir: /app
+        user: "dump"
+        networks:
+            - pocketpay-manager-internal
+            - pocketpay-manager-external
+        restart: "no"
+        depends_on:
+            - phpfpm
+        ports:
+            - "80:8080"
+            - "443:8443"
+        volumes:
+            - ./pocket-manager:/app
+            - ./docker/pocket-manager/nginx/dev.conf:/opt/bitnami/nginx/conf/server_blocks/default.conf:ro
+
+    pocketpay-manager-api:
+        image: dumptec/php-fpm:dev-8.2-latest
+        hostname: pocketpay-manager-api
+        container_name: pocketpay-manager-api
+        working_dir: /app
+        user: "dump"
+        dns: 1.1.1.1
+        ports:
+            - "22002:22"
+        extra_hosts:
+            - "host.docker.internal:${PHPFPM_XDEBUG_HOST_IP}"
+        networks:
+            - pocketpay-manager-internal
+        restart: "no"
+        volumes:
+            - ./pocket-manager:/app
+
+    pocketpay-manager-worker:
+        image: dumptec/php-fpm:dev-8.2-latest
+        hostname: pocketpay-manager-worker
+        container_name: pocketpay-manager-worker
+        working_dir: /app
+        user: "dump"
+        dns: 1.1.1.1
+        networks:
+            - pocketpay-manager-internal
+        restart: "no"
+        volumes:
+            - ./pocket-manager:/app
+
+    pocketpay-manager-database:
+        image: postgres:14
+        hostname: pocketpay-manager-database
+        container_name: pocketpay-manager-database
+        environment:
+            - POSTGRES_USER=${DB_USERNAME}
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+            - POSTGRES_DB=${DB_DATABASE}
+            - PGDATA=/var/lib/postgresql/data/pgdata
+            - PGTZ=${TIMEZONE}
+        ports:
+            - "5432:5432"
+        networks:
+            - pocketpay-manager-internal
+        restart: "no"
+        volumes:
+            - pocketpay-manager-db:/var/lib/postgresql/data/pgdata
+
+    pocketpay-manager-queue:
+        image: bitnami/redis
+        hostname: pocketpay-manager-queue
+        container_name: pocketpay-manager-queue
+        networks:
+            - pocketpay-manager-internal
+        restart: "no"
+        volumes:
+            - pocketpay-manager-queue:/bitnami/redis/data
+        environment:
+            - ALLOW_EMPTY_PASSWORD=no
+            - REDIS_PASSWORD=${REDIS_PASSWORD}
+            - TZ=${TIMEZONE}
+
+    pocketpay-manager-redisadmin:
+        image: erikdubbelboer/phpredisadmin
+        hostname: pocketpay-manager-redisadmin
+        container_name: pocketpay-manager-redisadmin
+        environment:
+            - REDIS_1_HOST=pocketpay-manager-queue
+            - REDIS_1_PORT=6379
+            - REDIS_1_AUTH=${REDIS_PASSWORD}
+        networks:
+            - pocketpay-manager-internal
+        restart: "no"
+        ports:
+            - 82:80
