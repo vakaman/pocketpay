@@ -28,6 +28,8 @@ services:
         volumes:
             - ./pocket-pay:/app
             - ./docker/pocket-pay/nginx/dev.conf:/opt/bitnami/nginx/conf/server_blocks/default.conf:ro
+            - ./docker/pocket-pay/nginx/ssl/server.crt://etc/ssl/localhost.crt:ro
+            - ./docker/pocket-pay/nginx/ssl/server.key://etc/ssl/localhost.key:ro
 
     pocketpay-api:
         image: dumptec/php-fpm:dev-8.2-latest
