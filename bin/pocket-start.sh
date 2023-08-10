@@ -54,3 +54,11 @@ if ! bash bin/pocket-manager.sh; then
     exit 1
 fi
 show "Pocket Manager was sucefully up"
+
+## Pocket Notifyer is an API to process messages that needs to be send to users
+show "Up Pocket Notifyer" "warning"
+if ! bash bin/pocket-notifyer.sh; then
+    show "ERROR: An error occurred while Up Pocket Notifyer" "fail"
+    exit 1
+fi
+show "Pocket Notifyer was sucefully up"
