@@ -19,9 +19,9 @@ services:
         user: "dump"
         networks:
             - pocketpay-internal
-        restart: "no"
+        restart: "on-failure"
         depends_on:
-            - phpfpm
+            - pocketpay-api
         ports:
             - "80:8080"
             - "443:8443"
@@ -45,9 +45,14 @@ services:
         networks:
             - pocketpay-internal
             - pocketpay-external
-        restart: "no"
+        restart: "on-failure"
         volumes:
             - ./pocket-pay:/app
+        env_file:
+            - pocket-pay/.env
+        depends_on:
+            pocketpay-database:
+                condition: service_healthy
 
     pocketpay-database:
         image: postgres:14
@@ -66,3 +71,8 @@ services:
         restart: "no"
         volumes:
             - pocketpay-db:/var/lib/postgresql/data/pgdata
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready"]
+            interval: 10s
+            timeout: 5s
+            retries: 5

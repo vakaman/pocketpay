@@ -21,12 +21,11 @@ services:
         networks:
             - pocketpay-manager-internal
             - pocketpay-manager-external
-        restart: "no"
+        restart: "on-failure"
         depends_on:
-            - phpfpm
+            - pocketpay-manager-api
         ports:
-            - "80:8080"
-            - "443:8443"
+            - "82:8080"
         volumes:
             - ./pocket-manager:/app
             - ./docker/pocket-manager/nginx/dev.conf:/opt/bitnami/nginx/conf/server_blocks/default.conf:ro
@@ -44,9 +43,14 @@ services:
             - "host.docker.internal:${PHPFPM_XDEBUG_HOST_IP}"
         networks:
             - pocketpay-manager-internal
-        restart: "no"
+        restart: "on-failure"
         volumes:
             - ./pocket-manager:/app
+        env_file:
+            - pocket-manager/.env
+        depends_on:
+            pocketpay-manager-database:
+                condition: service_healthy
 
     pocketpay-manager-worker:
         image: dumptec/php-fpm:dev-8.2-latest
@@ -57,9 +61,15 @@ services:
         dns: 1.1.1.1
         networks:
             - pocketpay-manager-internal
-        restart: "no"
+        restart: "on-failure"
         volumes:
             - ./pocket-manager:/app
+        env_file:
+            - pocket-manager/.env
+        depends_on:
+            - pocketpay-manager-queue
+            - pocketpay-manager-database
+                - condition=service_healthy
 
     pocketpay-manager-database:
         image: postgres:14
@@ -78,6 +88,11 @@ services:
         restart: "no"
         volumes:
             - pocketpay-manager-db:/var/lib/postgresql/data/pgdata
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
     pocketpay-manager-queue:
         image: bitnami/redis
@@ -85,7 +100,7 @@ services:
         container_name: pocketpay-manager-queue
         networks:
             - pocketpay-manager-internal
-        restart: "no"
+        restart: "on-failure"
         volumes:
             - pocketpay-manager-queue:/bitnami/redis/data
         environment:
@@ -103,6 +118,8 @@ services:
             - REDIS_1_AUTH=${REDIS_PASSWORD}
         networks:
             - pocketpay-manager-internal
-        restart: "no"
+        restart: "on-failure"
         ports:
-            - 82:80
+            - "822:80"
+        depends_on:
+            - pocketpay-manager-queue
