@@ -2,6 +2,7 @@
 
 show()
 {
+    project="Pocket Start"
     message=$1
     type=$2
     reset="\\033[0m \n"
@@ -14,7 +15,7 @@ show()
         color='\e[92m'
     fi
 
-    printf "%b %b %b" "$color" "$message" "$reset"
+    printf "%b - %b %b %b" "$project" "$color" "$message" "$reset"
 }
 
 APP_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 || exit ; pwd -P )" && cd "$APP_PATH"/../ || exit
@@ -35,8 +36,21 @@ docker-compose \
 
 show "Create external networks..." "warning"
 docker network create pocketpay-external || true
-docker network create pocket-manager-external || true
-docker network create pocket-notifyer-external || true
+docker network create pocketpay-manager-external || true
+docker network create pocketpay-notifyer-external || true
 
+## Pocket Pay is a web system that has provides a fryendly interface to user
 show "Up Pocket Pay" "warning"
-bash bin/pocket-pay.sh
+if ! bash bin/pocket-pay.sh ; then
+    show "ERROR: An error occurred while Up Pocket Pay" "fail"
+    exit 1
+fi
+show "Pocket Pay was sucefully up"
+
+## Pocket Manager is an API to process and manage users funds
+show "Up Pocket Manager" "warning"
+if ! bash bin/pocket-manager.sh; then
+    show "ERROR: An error occurred while Up Pocket Manager" "fail"
+    exit 1
+fi
+show "Pocket Manager was sucefully up"
