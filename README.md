@@ -9,7 +9,7 @@ The structure utilizes Docker as a container engine and divides services using D
 To execute transactions, the system employs a simple queue to ensure that if any issues arise during execution, the job will not be lost.
 
 
-## Instalation steps
+## Installation steps
 
 ```bash
 ## SSL Configuration
