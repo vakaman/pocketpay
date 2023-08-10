@@ -1,5 +1,8 @@
 ﻿# Pocket Pay
 
+<img src="pocket-pay/public/img/logo-branco.png" width=100>
+
+
 ## Brief
 
 A simple system that transfers funds between users, using a microservices strategy.
