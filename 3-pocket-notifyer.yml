@@ -1,7 +1,7 @@
 version: "4"
 
 volumes:
-    pocket-notifyer-queue:
+    pocketpay-notifyer-queue:
 
 networks:
     pocketpay-notifyer-internal:
@@ -11,93 +11,103 @@ networks:
 
 services:
 
-    pocket-notifyer-webserver:
+    pocketpay-notifyer-webserver:
         image: dumptec/nginx:1.21.dev
-        hostname: pocket-notifyer-webserver
-        container_name: pocket-notifyer-webserver
+        hostname: pocketpay-notifyer-webserver
+        container_name: pocketpay-notifyer-webserver
         working_dir: /app
         user: "dump"
         networks:
             - pocketpay-notifyer-internal
             - pocketpay-notifyer-external
-        restart: "no"
+        restart: "on-failure"
         depends_on:
-            - phpfpm
+            - pocketpay-notifyer-api
         ports:
-            - "81:8080"
+            - "83:8080"
         volumes:
             - ./pocket-notifyer:/app
             - ./docker/pocket-notifyer/nginx/dev.conf:/opt/bitnami/nginx/conf/server_blocks/default.conf:ro
 
-    pocket-notifyer-api:
+    pocketpay-notifyer-api:
         image: dumptec/php-fpm:dev-8.2-latest
-        hostname: pocket-notifyer-api
-        container_name: pocket-notifyer-api
+        hostname: pocketpay-notifyer-api
+        container_name: pocketpay-notifyer-api
         working_dir: /app
         user: "dump"
         dns: 1.1.1.1
         ports:
-            - "22001:22"
+            - "22003:22"
         extra_hosts:
             - "host.docker.internal:${PHPFPM_XDEBUG_HOST_IP}"
         networks:
             - pocketpay-notifyer-internal
-        restart: "no"
+        restart: "on-failure"
         volumes:
             - ./pocket-notifyer:/app
+        depends_on:
+            - pocketpay-notifyer-queue
+        env_file:
+            - pocket-notifyer/.env
 
-    pocket-notifyer-worker:
+    pocketpay-notifyer-worker:
         image: dumptec/php-fpm:dev-8.2-latest
-        hostname: pocket-notifyer-worker
-        container_name: pocket-notifyer-worker
+        hostname: pocketpay-notifyer-worker
+        container_name: pocketpay-notifyer-worker
         working_dir: /app
         user: "dump"
         dns: 1.1.1.1
         ports:
-            - "22002:22"
+            - "22033:22"
         extra_hosts:
             - "host.docker.internal:${PHPFPM_XDEBUG_HOST_IP}"
         networks:
             - pocketpay-notifyer-internal
-        restart: "no"
+        restart: "on-failure"
         volumes:
             - ./pocket-notifyer:/app
+        depends_on:
+            - pocketpay-notifyer-queue
+        env_file:
+            - pocket-notifyer/.env
 
-    pocket-notifyer-mailhog:
-        image: mailhog/mailhog
-        hostname: pocket-notifyer-mailhog
-        container_name: pocket-notifyer-mailhog
-        restart: "no"
-        networks:
-            - pocketpay-notifyer-internal
-        ports:
-            - ${MAILHOG_WEB_SMTP}:1025
-            - ${MAILHOG_WEB_PORT}:8025
-
-    pocket-notifyer-queue:
+    pocketpay-notifyer-queue:
         image: bitnami/redis
-        hostname: pocket-notifyer-queue
-        container_name: pocket-notifyer-queue
+        hostname: pocketpay-notifyer-queue
+        container_name: pocketpay-notifyer-queue
         networks:
             - pocketpay-notifyer-internal
-        restart: "no"
+        restart: "on-failure"
         volumes:
-            - pocket-notifyer-queue:/bitnami/redis/data
+            - pocketpay-notifyer-queue:/bitnami/redis/data
         environment:
             - ALLOW_EMPTY_PASSWORD=no
             - REDIS_PASSWORD=${REDIS_PASSWORD}
             - TZ=${TIMEZONE}
 
-    pocket-notifyer-redisadmin:
+    pocketpay-notifyer-redisadmin:
         image: erikdubbelboer/phpredisadmin
-        hostname: pocket-notifyer-redisadmin
-        container_name: pocket-notifyer-redisadmin
+        hostname: pocketpay-notifyer-redisadmin
+        container_name: pocketpay-notifyer-redisadmin
         environment:
-            - REDIS_1_HOST=pocket-notifyer-queue
+            - REDIS_1_HOST=pocketpay-notifyer-queue
             - REDIS_1_PORT=6379
             - REDIS_1_AUTH=${REDIS_PASSWORD}
         networks:
             - pocketpay-notifyer-internal
-        restart: "no"
+        restart: "on-failure"
         ports:
-            - 83:80
+            - 833:80
+        depends_on:
+            - pocketpay-notifyer-queue
+
+    pocketpay-notifyer-mailhog:
+        image: mailhog/mailhog
+        hostname: pocketpay-notifyer-mailhog
+        container_name: pocketpay-notifyer-mailhog
+        restart: "on-failure"
+        networks:
+            - pocketpay-notifyer-internal
+        ports:
+            - ${MAILHOG_WEB_SMTP}:1025
+            - ${MAILHOG_WEB_PORT}:8025
