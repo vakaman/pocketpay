@@ -4,6 +4,7 @@ namespace App\Infrastructure\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Infrastructure\Http\Entity\EmailRequest;
+use App\Infrastructure\Http\Entity\Status;
 use App\Service\EmailService;
 use Illuminate\Http\Response;
 
@@ -18,6 +19,6 @@ class EmailController extends Controller
     {
         $this->emailService->send($emailRequest);
 
-        return response()->noContent(201);
+        return response()->noContent(Status::CREATED);
     }
 }
