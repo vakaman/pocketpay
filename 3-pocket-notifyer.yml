@@ -71,36 +71,6 @@ services:
         env_file:
             - pocket-notifyer/.env
 
-    pocketpay-notifyer-queue:
-        image: bitnami/redis
-        hostname: pocketpay-notifyer-queue
-        container_name: pocketpay-notifyer-queue
-        networks:
-            - pocketpay-notifyer-internal
-        restart: "on-failure"
-        volumes:
-            - pocketpay-notifyer-queue:/bitnami/redis/data
-        environment:
-            - ALLOW_EMPTY_PASSWORD=no
-            - REDIS_PASSWORD=${REDIS_PASSWORD}
-            - TZ=${TIMEZONE}
-
-    pocketpay-notifyer-redisadmin:
-        image: erikdubbelboer/phpredisadmin
-        hostname: pocketpay-notifyer-redisadmin
-        container_name: pocketpay-notifyer-redisadmin
-        environment:
-            - REDIS_1_HOST=pocketpay-notifyer-queue
-            - REDIS_1_PORT=6379
-            - REDIS_1_AUTH=${REDIS_PASSWORD}
-        networks:
-            - pocketpay-notifyer-internal
-        restart: "on-failure"
-        ports:
-            - 833:80
-        depends_on:
-            - pocketpay-notifyer-queue
-
     pocketpay-notifyer-mailhog:
         image: mailhog/mailhog
         hostname: pocketpay-notifyer-mailhog
@@ -111,3 +81,21 @@ services:
         ports:
             - ${MAILHOG_WEB_SMTP}:1025
             - ${MAILHOG_WEB_PORT}:8025
+
+    pocketpay-notifyer-queue:
+        image: rabbitmq:3.9-management-alpine
+        container_name: pocketpay-notifyer-queue
+        hostname: pocketpay-notifyer-queue
+        container_name: pocketpay-notifyer-queue
+        restart: "on-failure"
+        env_file:
+            - pocket-notifyer/.env
+        networks:
+            - pocketpay-notifyer-internal
+        ports:
+            - "833:15672"
+        healthcheck:
+            test: rabbitmq-diagnostics -q ping
+            interval: 30s
+            timeout: 30s
+            retries: 3
