@@ -34,11 +34,6 @@ docker-compose \
     -f 3-pocket-notifyer.yml \
     pull
 
-show "Create external networks..." "warning"
-docker network create pocketpay-external || true
-docker network create pocketpay-manager-external || true
-docker network create pocketpay-notifyer-external || true
-
 ## Pocket Pay is a web system that has provides a fryendly interface to user
 show "Up Pocket Pay" "warning"
 if ! bash bin/pocket-pay.sh ; then

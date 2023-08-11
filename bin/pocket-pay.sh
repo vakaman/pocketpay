@@ -23,6 +23,8 @@ show()
     printf "%b - %b %b %b" "$project" "$color" "$message" "$reset"
 }
 
+show "Create external networks..." "warning"
+docker network create pocketpay-external || true
 
 show "Execute pre-build script..." "warning"
 if ! docker run --rm -v "$pocketpayfolder":/app -w /app --user "$(id -u)":"$(id -g)" dumptec/php-fpm:dev-8.2-latest bash \
