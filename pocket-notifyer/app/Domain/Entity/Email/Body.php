@@ -15,7 +15,7 @@ class Body
         $this->message = Sanitize::string($body);
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return (array) $this;
     }

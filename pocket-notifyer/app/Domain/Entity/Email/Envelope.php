@@ -10,7 +10,7 @@ class Envelope
     ) {
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return (array) $this;
     }

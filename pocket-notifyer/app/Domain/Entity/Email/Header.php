@@ -33,7 +33,7 @@ class Header
         $this->reply_to = Sanitize::string($reply_to);
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return (array) $this;
     }
