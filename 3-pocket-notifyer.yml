@@ -2,6 +2,7 @@ version: "4"
 
 volumes:
     pocketpay-notifyer-queue:
+    pocketpay-notifyer-db:
 
 networks:
     pocketpay-notifyer-internal:
@@ -47,6 +48,8 @@ services:
             - ./pocket-notifyer:/app
         depends_on:
             - pocketpay-notifyer-queue
+            - pocketpay-manager-database
+                - condition=service_healthy
         env_file:
             - pocket-notifyer/.env
 
@@ -66,10 +69,12 @@ services:
         restart: "on-failure"
         volumes:
             - ./pocket-notifyer:/app
-        depends_on:
-            - pocketpay-notifyer-queue
         env_file:
             - pocket-notifyer/.env
+        depends_on:
+            - pocketpay-notifyer-queue
+            - pocketpay-manager-database
+                - condition=service_healthy
 
     pocketpay-notifyer-mailhog:
         image: mailhog/mailhog
@@ -99,3 +104,26 @@ services:
             interval: 30s
             timeout: 30s
             retries: 3
+
+    pocketpay-notifyer-database:
+        image: postgres:14
+        hostname: pocketpay-notifyer-database
+        container_name: pocketpay-notifyer-database
+        ports:
+            - "5433:5432"
+        networks:
+            - pocketpay-notifyer-internal
+        restart: "no"
+        volumes:
+            - pocketpay-notifyer-db:/var/lib/postgresql/data/pgdata
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+        environment:
+            - POSTGRES_USER=${DB_USERNAME}
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+            - POSTGRES_DB=${DB_DATABASE}
+            - PGDATA=/var/lib/postgresql/data/pgdata
+            - PGTZ=${TIMEZONE}
