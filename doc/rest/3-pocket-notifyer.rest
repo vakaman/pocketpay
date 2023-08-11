@@ -5,11 +5,12 @@ Content-Type: text/plain
 {
     "headers": {
         "subject": "Email subject",
-        "date": "Thu, 4 Mar 2010 15:35:32 -0800",
+        "date": "2023-08-10 12:25:00",
         "from": "from@email.com.br",
+        "sender": "Sender Name",
         "to": "to@email.com.br",
-        "sender": "My sender Name",
-        "reply-to": "from@email.com.br"
+        "receiver": "Receiver Name",
+        "reply_to": "from@email.com.br"
     },
     "body": {
         "content_type": "text/plain",
@@ -25,11 +26,12 @@ Content-Type: application/json
 {
     "headers": {
         "subject": "Email subject",
-        "date": "Thu, 4 Mar 2010 15:35:32 -0800",
+        "date": "2023-08-10 12:25:00",
         "from": "from@email.com.br",
+        "sender": "Sender Name",
         "to": "to@email.com.br",
-        "sender": "My sender Name",
-        "reply-to": "from@email.com.br"
+        "receiver": "Receiver Name",
+        "reply_to": "from@email.com.br"
     },
     "body": {
         "content_type": "text/plain",
