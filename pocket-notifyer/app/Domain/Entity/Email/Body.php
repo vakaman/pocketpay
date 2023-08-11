@@ -9,10 +9,8 @@ class Body
     public readonly string $content_type;
     public readonly string $message;
 
-    public function __construct(
-        string $content_type = 'text/plain',
-        string $body
-    ) {
+    public function __construct(string $content_type, string $body)
+    {
         $this->content_type = Sanitize::string($content_type);
         $this->message = Sanitize::string($body);
     }
