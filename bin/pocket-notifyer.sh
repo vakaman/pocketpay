@@ -50,8 +50,15 @@ if ! docker-compose -f "$dockercompose" exec "$containerapi" php artisan config:
      exit 1
 fi
 
-show "Update dependencies NPM..."
+show "Update dependencies NPM..." "warning"
 if ! docker-compose -f "$dockercompose" exec "$containerapi" npm install; then
     show "ERROR: An error occurred while updaTe NPM packages"
+    exit 1
+fi
+
+show "Create required queue..." "warning"
+if ! docker-compose -f "$dockercompose" exec pocketpay-notifyer-queue \
+    bash -c "/bin/sleep 5; /usr/local/bin/rabbitmqadmin declare queue name=pocketpay_notifyer durable=true -u baduser -p badpass"; then
+    show "ERROR: An error occurred while create required queue"
     exit 1
 fi
