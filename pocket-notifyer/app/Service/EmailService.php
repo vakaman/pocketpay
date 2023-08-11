@@ -12,12 +12,15 @@ class EmailService
 {
     public function send(EmailRequest $emailRequest)
     {
-        $email = new Envelope(
+        SendEmail::dispatch($this->getEnvelope($emailRequest));
+    }
+
+    private function getEnvelope(EmailRequest $emailRequest): Envelope
+    {
+        return new Envelope(
             $this->getHeader($emailRequest),
             $this->getBody($emailRequest)
         );
-
-        SendEmail::dispatch($email);
     }
 
     private function getHeader(EmailRequest $emailRequest): Header
