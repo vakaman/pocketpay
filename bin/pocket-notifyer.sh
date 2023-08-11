@@ -23,6 +23,8 @@ show()
     printf "%b - %b %b %b" "$project" "$color" "$message" "$reset"
 }
 
+show "Create external networks..." "warning"
+docker network create pocketpay-notifyer-external || true
 
 show "Execute pre-build script..." "warning"
 if ! docker run --rm -v "$pocketpayfolder":/app -w /app --user "$(id -u)":"$(id -g)" dumptec/php-fpm:dev-8.2-latest bash \
@@ -54,6 +56,12 @@ show "Update dependencies NPM..." "warning"
 if ! docker-compose -f "$dockercompose" exec "$containerapi" npm install; then
     show "ERROR: An error occurred while updaTe NPM packages"
     exit 1
+fi
+
+show "Execute migrations and seeds..." "warning"
+if ! docker-compose -f "$dockercompose" exec "$containerapi" php artisan migrate:fresh --seed --force; then
+     show "ERROR: An error occurred while execute migrations" "fail"
+     exit 1
 fi
 
 show "Create required queue..." "warning"
