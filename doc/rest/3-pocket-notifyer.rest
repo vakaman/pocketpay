@@ -1,0 +1,38 @@
+### Send an email without using the content-type application/json
+POST {{ host_pocket_notifyer }}/api/email
+Content-Type: text/plain
+
+{
+    "headers": {
+        "subject": "Email subject",
+        "date": "Thu, 4 Mar 2010 15:35:32 -0800",
+        "from": "from@email.com.br",
+        "to": "to@email.com.br",
+        "sender": "My sender Name",
+        "reply-to": "from@email.com.br"
+    },
+    "body": {
+        "content_type": "text/plain",
+        "message": "Content from my message"
+    }
+}
+
+
+### Send e-mail to client
+POST {{ host_pocket_notifyer }}/api/email
+Content-Type: application/json
+
+{
+    "headers": {
+        "subject": "Email subject",
+        "date": "Thu, 4 Mar 2010 15:35:32 -0800",
+        "from": "from@email.com.br",
+        "to": "to@email.com.br",
+        "sender": "My sender Name",
+        "reply-to": "from@email.com.br"
+    },
+    "body": {
+        "content_type": "text/plain",
+        "message": "Content from my message"
+    }
+}
