@@ -16,8 +16,9 @@ class EmailTest extends TestCase
             'My subject',
             '2023-08-10 12:25:00',
             'from@email.com.br',
-            'to@email.com.br',
             'My sender Name',
+            'to@email.com.br',
+            'Receiver Name',
             'from@email.com.br'
         );
 
@@ -27,8 +28,9 @@ class EmailTest extends TestCase
             'subject' => 'My subject',
             'date' => '2023-08-10 12:25:00',
             'from' => 'from@email.com.br',
-            'to' => 'to@email.com.br',
             'sender' => 'My sender Name',
+            'to' => 'to@email.com.br',
+            'receiver' => 'Receiver Name',
             'reply_to' => 'from@email.com.br'
         ], $mailArray);
     }
@@ -54,8 +56,9 @@ class EmailTest extends TestCase
             'My subject',
             '2023-08-10 12:25:00',
             'from@email.com.br',
-            'to@email.com.br',
             'My sender Name',
+            'to@email.com.br',
+            'Receiver Name',
             'from@email.com.br'
         );
 
@@ -73,8 +76,9 @@ class EmailTest extends TestCase
             'subject' => 'My subject',
             'date' => '2023-08-10 12:25:00',
             'from' => 'from@email.com.br',
-            'to' => 'to@email.com.br',
             'sender' => 'My sender Name',
+            'to' => 'to@email.com.br',
+            'receiver' => 'Receiver Name',
             'reply_to' => 'from@email.com.br'
         ], $headerArray);
 
