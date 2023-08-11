@@ -25,7 +25,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Util/Functions.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
@@ -45,7 +48,8 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
-        ]
+        ],
+        "test": "php artisan test"
     },
     "extra": {
         "laravel": {
