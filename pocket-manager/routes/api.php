@@ -1,19 +1,15 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Infrastructure\Http\Controller\BalanceController;
+use App\Infrastructure\Http\Controller\TransactionController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
+Route::get("/balance/{person}/{pocket}", [BalanceController::class, 'balance']);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get("/transaction/{id}", [TransactionController::class, 'detail']);
+Route::get("/transaction/history/{person}/{pocket}", [TransactionController::class, 'history']);
+Route::post("/transaction", [TransactionController::class, 'transaction']);
+
+Route::post("/pocket", [PocketController::class, 'create']);
+Route::patch("/pocket", [PocketController::class, 'setMain']);
+
