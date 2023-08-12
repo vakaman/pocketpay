@@ -95,31 +95,19 @@ services:
             retries: 5
 
     pocketpay-manager-queue:
-        image: bitnami/redis
+        image: rabbitmq:3.9-management-alpine
+        container_name: pocketpay-manager-queue
         hostname: pocketpay-manager-queue
         container_name: pocketpay-manager-queue
+        restart: "on-failure"
+        env_file:
+            - pocket-notifyer/.env
         networks:
             - pocketpay-manager-internal
-        restart: "on-failure"
-        volumes:
-            - pocketpay-manager-queue:/bitnami/redis/data
-        environment:
-            - ALLOW_EMPTY_PASSWORD=no
-            - REDIS_PASSWORD=${REDIS_PASSWORD}
-            - TZ=${TIMEZONE}
-
-    pocketpay-manager-redisadmin:
-        image: erikdubbelboer/phpredisadmin
-        hostname: pocketpay-manager-redisadmin
-        container_name: pocketpay-manager-redisadmin
-        environment:
-            - REDIS_1_HOST=pocketpay-manager-queue
-            - REDIS_1_PORT=6379
-            - REDIS_1_AUTH=${REDIS_PASSWORD}
-        networks:
-            - pocketpay-manager-internal
-        restart: "on-failure"
         ports:
-            - "822:80"
-        depends_on:
-            - pocketpay-manager-queue
+            - "822:15672"
+        healthcheck:
+            test: rabbitmq-diagnostics -q ping
+            interval: 30s
+            timeout: 30s
+            retries: 3
