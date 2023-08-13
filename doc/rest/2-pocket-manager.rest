@@ -7,7 +7,7 @@ GET {{ host_pocket_manager }}/api/transaction/{{ pocket_manager_transaction_id }
 ### Get customer transaction history
 GET {{ host_pocket_manager }}/api/transaction/history/{{ pocket_manager_person_id }}/{{ pocket_manager_pocket_id }}
 
-### Transfer funds between customer's pockets
+### Transfer funds between customer's wallets
 POST {{ host_pocket_manager }}/api/transaction
 Content-Type: application/json
 {
