@@ -9,3 +9,15 @@ if (!function_exists('ddt')) {
     }
 }
 
+if (!function_exists('isUuid')) {
+
+    function isUuid(string $uuid): bool
+    {
+        $uuidv4_pattern = '/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/';
+        if (preg_match($uuidv4_pattern, $uuid)) {
+            return true;
+        }
+
+        return false;
+    }
+}
