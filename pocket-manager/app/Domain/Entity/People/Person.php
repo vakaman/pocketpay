@@ -2,7 +2,7 @@
 
 namespace App\Domain\Entity\People;
 
-use App\Domain\Entity\Email\Email;
+use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Name;
 use App\Domain\ValueObject\Uuid;
 
