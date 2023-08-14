@@ -18,6 +18,9 @@ interface WalletRepositoryInterface
 
     public function haveFunds(Uuid $wallet, Money $value): bool;
 
-    public function getPerson(Wallet $wallet): Person
-    ;
+    public function getPerson(Wallet $wallet): Person;
+
+    public function addFunds(Wallet $wallet, Money $money): int;
+
+    public function subtractfunds(Wallet $wallet, Money $money): int;
 }
