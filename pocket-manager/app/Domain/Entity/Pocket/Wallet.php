@@ -3,21 +3,30 @@
 namespace App\Domain\Entity\Pocket;
 
 use App\Domain\Entity\Currency\Money;
+use App\Domain\ValueObject\Uuid;
+use Ramsey\Uuid\Uuid as UuidGenerator;
 
 class Wallet
 {
+    public readonly Uuid $id;
+    public readonly Money $money;
+    public readonly bool $main;
+
     public function __construct(
-        public readonly string $id,
-        public readonly Money $money = new Money(0),
-        public readonly bool $main = false
+        ?Uuid $id = null,
+        ?Money $money = null,
+        ?bool $main = null
     ) {
+        $this->id = $id ?? new Uuid((UuidGenerator::uuid4())->toString());
+        $this->money = $money ?? new Money(0);
+        $this->main = $main ?? false;
     }
 
     public static function toEntity(array $model): Wallet
     {
         return new self(
-            id: $model['id'],
-            money: $model['money'],
+            id: new Uuid($model['id']),
+            money: new Money($model['money']),
             main: (bool) $model['main']
         );
     }
