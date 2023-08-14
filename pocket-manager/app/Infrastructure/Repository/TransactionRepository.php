@@ -6,6 +6,7 @@ use App\Domain\Entity\Financial\Transaction;
 use App\Domain\Entity\Financial\TransactionHistory;
 use App\Domain\Entity\Financial\Transactions;
 use App\Domain\Repository\TransactionRepositoryInterface;
+use App\Domain\ValueObject\Uuid;
 use App\Models\Transaction as ModelsTransaction;
 
 class TransactionRepository implements TransactionRepositoryInterface
@@ -17,14 +18,19 @@ class TransactionRepository implements TransactionRepositoryInterface
         return Transaction::toEntity($transaction);
     }
 
-    public function history(string $wallet): TransactionHistory
+    public function history(Uuid $wallet): TransactionHistory
     {
-        $transactions = ModelsTransaction::where('from', $wallet)
+        $transactions = ModelsTransaction::where('from', $wallet->value)
             ->get()
             ->toArray();
 
         return TransactionHistory::toEntity(
             new Transactions($transactions)
         );
+    }
+
+    public function transact(Transaction $wallet): bool
+    {
+        return true;
     }
 }
