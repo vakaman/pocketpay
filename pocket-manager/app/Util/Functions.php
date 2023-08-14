@@ -21,3 +21,22 @@ if (!function_exists('isUuid')) {
         return false;
     }
 }
+
+if (!function_exists('transaction')) {
+    function transaction(Closure $callback, int $attempts = 1): mixed
+    {
+        return Illuminate\Support\Facades\DB::transaction($callback, $attempts);
+    }
+}
+
+if (!function_exists('throw_unless_transaction')) {
+    function throw_unless_transaction(
+        Closure $callback,
+        string|Throwable $exception = 'RuntimeException',
+        mixed ...$parameters
+    ): mixed {
+        return throw_unless(
+            transaction($callback), $exception, $parameters
+        );
+    }
+}
