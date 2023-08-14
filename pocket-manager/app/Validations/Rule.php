@@ -21,6 +21,8 @@ class Rule extends \Illuminate\Validation\Rule
 
     public const integer = 'integer';
 
+    public const unsigned = 'gt:0';
+
     public const string = 'string';
 
     public const numeric = 'numeric';
