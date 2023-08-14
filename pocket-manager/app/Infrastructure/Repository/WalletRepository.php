@@ -49,4 +49,16 @@ class WalletRepository implements WalletRepositoryInterface
 
         return Person::toEntity($person);
     }
+
+    public function addFunds(PocketWallet $wallet, Money $money): int
+    {
+        return Wallet::where('id', $wallet->id)
+            ->increment('money', $money->toInt());
+    }
+
+    public function subtractfunds(PocketWallet $wallet, Money $money): int
+    {
+        return Wallet::where('id', $wallet->id)
+            ->decrement('money', $money->toInt());
+    }
 }
