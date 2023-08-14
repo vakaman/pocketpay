@@ -1,31 +1,37 @@
 ### Get balance of customer's pocket
-GET {{ host_pocket_manager }}/api/balance/{{ pocket_manager_person_id }}/{{ pocket_manager_pocket_id }}
+GET {{ host_wallet_manager }}/api/balance/{{ wallet_manager_person_id }}/{{ wallet_manager_wallet_id }}
 
 ### Get customer transaction detail
-GET {{ host_pocket_manager }}/api/transaction/{{ pocket_manager_transaction_id }}
+GET {{ host_wallet_manager }}/api/transaction/{{ wallet_manager_transaction_id }}
 
 ### Get customer transaction history
-GET {{ host_pocket_manager }}/api/transaction/history/{{ pocket_manager_person_id }}/{{ pocket_manager_pocket_id }}
+GET {{ host_wallet_manager }}/api/transaction/history/{{ wallet_manager_person_id }}/{{ wallet_manager_wallet_id }}
 
 ### Transfer funds between customer's wallets
-POST {{ host_pocket_manager }}/api/transaction
+POST {{ host_wallet_manager }}/api/transaction
 Content-Type: application/json
 {
-    "from_person": "b764d6e9-835e-436b-931f-58d45763f379",
-    "from_pocket": "a54995f0-cd55-450a-9b21-99c42813a572",
-    "to_person": "ce1be501-24fe-45fa-bdbe-b1a4175d93d1",
+    "from_wallet": "a54995f0-cd55-450a-9b21-99c42813a572",
+    "to_wallet": "ce1be501-24fe-45fa-bdbe-b1a4175d93d1",
     "value": 100
 }
 
-### Create a customer pocket
-POST {{ host_pocket_manager }}/api/pocket
+### Create a customer wallet
+POST {{ host_wallet_manager }}/api/wallet
 Content-Type: application/json
 {
     "person": "b764d6e9-835e-436b-931f-58d45763f379"
 }
 
-### Set a client pocket as main pocket
-PATCH {{ host_pocket_manager }}/api/pocket/main
+### Set a client pocket as main wallet
+PATCH {{ host_wallet_manager }}/api/wallet/main
+Content-Type: application/json
+{
+    "id": "a54995f0-cd55-450a-9b21-99c42813a572"
+}
+
+### Set a client pocket as main Wallet
+PATCH {{ host_wallet_manager }}/api/Wallet/main
 Content-Type: application/json
 {
     "id": "a54995f0-cd55-450a-9b21-99c42813a572"
