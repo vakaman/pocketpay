@@ -11,6 +11,7 @@ Route::get("/transaction/{id}", [TransactionController::class, 'detail']);
 Route::get("/transaction/history/{person}/{wallet}", [TransactionController::class, 'history']);
 Route::post("/transaction", [TransactionController::class, 'transaction']);
 
+Route::get("/wallet/person", [WalletController::class, 'all']);
+Route::get("/wallet/person", [WalletController::class, 'main']);
 Route::post("/wallet", [WalletController::class, 'create']);
-Route::patch("/wallet", [WalletController::class, 'setMain']);
-
+Route::patch("/wallet/main", [WalletController::class, 'setMain']);
