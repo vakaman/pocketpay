@@ -6,15 +6,15 @@ use App\Util\Sanitize;
 
 class Email
 {
-    private string $email;
+    public readonly string $value;
 
     public function __construct(string $email)
     {
-        $this->email = Sanitize::email($email);
+        $this->value = Sanitize::email($email);
     }
 
     public function __toString(): string
     {
-        return $this->email;
+        return $this->value;
     }
 }

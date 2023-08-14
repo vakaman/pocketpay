@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Infrastructure\Http\Entity\Status;
+use App\Infrastructure\Http\Entity\StatusCode;
 use App\Jobs\SendEmail;
 use Illuminate\Support\Facades\Bus;
 use Tests\TestCase;
@@ -32,7 +32,7 @@ class EmailTest extends TestCase
 
         $response = $this->postJson('/api/email', $emailContent);
 
-        $response->assertStatus(Status::CREATED);
+        $response->assertStatus(StatusCode::CREATED->value);
     }
 
     public function test_the_email_api_dispatch_job(): void
