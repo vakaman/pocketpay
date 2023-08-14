@@ -8,6 +8,7 @@ use App\Domain\Entity\People\Person;
 use App\Domain\Entity\Pocket\Wallet;
 use App\Domain\Entity\Pocket\Wallets;
 use App\Domain\Exception\Transaction\TransactionFailException;
+use App\Domain\Exception\Transaction\TransactionUnauthorized;
 use App\Domain\Repository\TransactionRepositoryInterface;
 use App\Domain\ValueObject\Uuid;
 use App\Infrastructure\Service\NotifyerService;
@@ -53,15 +54,16 @@ class TransactionService
 
     private function commitTransaction(Transaction $transaction): void
     {
-        if ($this->canTransact($transaction)) {
-
-            throw_unless_transaction(
-                fn () => $this->transactionRepository->transact($transaction) &&
-                    $this->notifyerService->send($transaction),
-                TransactionFailException::class,
-                $transaction
-            );
+        if (!$this->canTransact($transaction)) {
+            throw new TransactionUnauthorized($transaction);
         }
+
+        throw_unless_transaction(
+            fn () => $this->transactionRepository->transact($transaction) &&
+                $this->notifyerService->send($transaction),
+            TransactionFailException::class,
+            $transaction
+        );
     }
 
     private function canTransact(Transaction $transaction): bool
