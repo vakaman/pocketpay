@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Domain\Entity\Currency\Money;
 use App\Domain\Repository\PersonRepositoryInterface;
 use App\Domain\Entity\Pocket\Wallet;
+use App\Domain\ValueObject\Uuid;
 use Tests\TestCase;
 
 class BalanceTest extends TestCase
@@ -16,9 +17,9 @@ class BalanceTest extends TestCase
             ->once()
             ->andReturn(
                 new Wallet(
-                    'fbcd05e1-9530-44e2-b0a2-de551b260c18',
-                    new Money(1500),
-                    true
+                    id: new Uuid('fbcd05e1-9530-44e2-b0a2-de551b260c18'),
+                    money: new Money(1500),
+                    main: true
                 )
             );
 
@@ -36,9 +37,9 @@ class BalanceTest extends TestCase
             ->once()
             ->andReturn(
                 new Wallet(
-                    'fbcd05e1-9530-44e2-b0a2-de551b260c18',
-                    new Money(1500),
-                    true
+                    id: new Uuid('fbcd05e1-9530-44e2-b0a2-de551b260c18'),
+                    money: new Money(1500),
+                    main: true
                 )
             );
 
