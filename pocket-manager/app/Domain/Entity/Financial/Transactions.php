@@ -84,12 +84,12 @@ class Transactions implements \Countable, \Iterator, \ArrayAccess
     {
         foreach ($transactions as $transaction) {
             $this->transactions[] = new Transaction(
-                new Uuid($transaction['id']),
-                new Uuid($transaction['from']),
-                new Uuid($transaction['to']),
-                new Money($transaction['value']),
-                new Carbon($transaction['created_at']),
-                new Carbon($transaction['updated_at'])
+                from: new Uuid($transaction['from']),
+                to: new Uuid($transaction['to']),
+                id: new Uuid($transaction['id']),
+                value: new Money($transaction['value']),
+                created_at: new Carbon($transaction['created_at']),
+                updated_at: new Carbon($transaction['updated_at'])
             );
         }
     }
