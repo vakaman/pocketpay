@@ -5,12 +5,20 @@ namespace App\Infrastructure\Repository;
 use App\Domain\Entity\Financial\Transaction;
 use App\Domain\Entity\Financial\TransactionHistory;
 use App\Domain\Entity\Financial\Transactions;
+use App\Domain\Entity\Pocket\Wallet;
 use App\Domain\Repository\TransactionRepositoryInterface;
+use App\Domain\Repository\WalletRepositoryInterface;
 use App\Domain\ValueObject\Uuid;
 use App\Models\Transaction as ModelsTransaction;
 
 class TransactionRepository implements TransactionRepositoryInterface
 {
+
+    public function __construct(
+        private WalletRepositoryInterface $walletRepository
+    ) {
+    }
+
     public function detail(string $id): Transaction
     {
         $transaction = ModelsTransaction::findOrFail($id)->toArray();
@@ -29,8 +37,20 @@ class TransactionRepository implements TransactionRepositoryInterface
         );
     }
 
-    public function transact(Transaction $wallet): bool
+    public function transact(Transaction $transaction): bool
     {
-        return true;
+        if (
+            $this->walletRepository->subtractfunds(
+                new Wallet($transaction->from),
+                $transaction->value
+            ) &&
+            $this->walletRepository->addFunds(
+                new Wallet($transaction->to),
+                $transaction->value
+            )
+        ) {
+            return true;
+        }
+        return false;
     }
 }
