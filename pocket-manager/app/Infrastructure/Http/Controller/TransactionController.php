@@ -11,13 +11,14 @@ use App\Infrastructure\Http\Entity\StatusCode;
 use App\Infrastructure\Http\Entity\Transaction\TransactionRequest;
 use App\Infrastructure\Mapper\Api\Transaction;
 use App\Infrastructure\Mapper\Api\TransactionHistory;
-use App\Service\TransactionService;
+use App\Service\Interfaces\TransactionServiceInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class TransactionController extends Controller
 {
     public function __construct(
-        private TransactionService $transactionService
+        private TransactionServiceInterface $transactionService
     ) {
     }
 
@@ -40,7 +41,7 @@ class TransactionController extends Controller
         return response()->json($transaction->response());
     }
 
-    public function transaction(TransactionRequest $transactionRequest)
+    public function transaction(TransactionRequest $transactionRequest): Response
     {
         $this->transactionService->createTransaction(
             new FinancialTransaction(
