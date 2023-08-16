@@ -16,7 +16,7 @@ Route::post("/wallet", [WalletController::class, 'create']);
 Route::get("/wallet/all/person/{person}", [WalletController::class, 'all']);
 Route::get("/wallet/main/person/{person}", [WalletController::class, 'main']);
 Route::patch("/wallet/main/{wallet}", [WalletController::class, 'setMain']);
-
+Route::patch("/wallet/funds/{wallet}/{money}", [WalletController::class, 'addFunds']);
 
 
 ################################################################################

@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Http\Controller;
 
+use App\Domain\Entity\Currency\Money;
 use App\Domain\Entity\People\Person;
 use App\Domain\Entity\Pocket\Wallet;
 use App\Domain\ValueObject\Uuid;
@@ -41,7 +42,7 @@ class WalletController extends Controller
         return response()->json($allWallets->request());
     }
 
-    public function main(string $person)
+    public function main(string $person): JsonResponse
     {
         $wallet = new PocketWallet($this->walletService->main(
             new Person(id: new Uuid($person))
@@ -58,6 +59,13 @@ class WalletController extends Controller
                 main: true
             )
         );
+
+        return response()->noContent(StatusCode::OK->value);
+    }
+
+    public function addFunds(string $wallet, int $money): Response
+    {
+        $this->walletService->addFunds(new Wallet(new Uuid($wallet)), new Money($money));
 
         return response()->noContent(StatusCode::OK->value);
     }

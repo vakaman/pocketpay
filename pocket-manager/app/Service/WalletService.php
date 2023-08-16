@@ -91,6 +91,13 @@ class WalletService implements WalletServiceInterface
         return $this->walletRepository->getPerson($wallet);
     }
 
+    public function addFunds(Wallet $wallet, Money $money): int
+    {
+        $this->needExists($wallet);
+
+        return $this->walletRepository->addFunds($wallet, $money);
+    }
+
     private function hasMainWallet(Person $person): bool
     {
         return empty($this->walletRepository->main($person)) ? true : false;
