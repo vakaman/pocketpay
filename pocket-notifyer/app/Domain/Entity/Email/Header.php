@@ -39,6 +39,15 @@ class Header
 
     public function toArray(): array
     {
-        return (array) $this;
+        return [
+            'subject' => $this->subject,
+            'from' => $this->from,
+            'sender' => $this->sender,
+            'to' => $this->to,
+            'receiver' => $this->receiver,
+            'money' => $this->money,
+            'reply_to' => $this->replyTo,
+            'date' => $this->date,
+        ];
     }
 }
