@@ -88,7 +88,7 @@ services:
             - ${MAILHOG_WEB_PORT}:8025
 
     pocketpay-notifyer-queue:
-        image: rabbitmq:3.9-management-alpine
+        image: rabbitmq:3.12.2-management-alpine
         container_name: pocketpay-notifyer-queue
         hostname: pocketpay-notifyer-queue
         container_name: pocketpay-notifyer-queue
