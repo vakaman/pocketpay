@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-
 class PersonWallet extends Pivot
 {
     protected $table = 'person_wallet';
