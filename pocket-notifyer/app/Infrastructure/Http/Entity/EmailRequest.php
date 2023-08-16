@@ -9,11 +9,11 @@ class EmailRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            "headers" => Rule::required,
-            "headers.subject" => Rule::required,
-            "headers.to" => Rule::required,
-            "body" => Rule::required,
-            "body.message" => Rule::required,
+            "headers" => Rule::REQUIRED,
+            "headers.subject" => Rule::REQUIRED,
+            "headers.to" => Rule::REQUIRED,
+            "body" => Rule::REQUIRED,
+            "body.message" => Rule::REQUIRED,
         ];
     }
 }

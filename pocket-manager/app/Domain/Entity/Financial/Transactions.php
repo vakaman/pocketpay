@@ -5,6 +5,7 @@ namespace App\Domain\Entity\Financial;
 use App\Domain\Entity\Currency\Money;
 use App\Domain\ValueObject\Uuid;
 use Illuminate\Support\Carbon;
+use InvalidArgumentException;
 
 class Transactions implements \Countable, \Iterator, \ArrayAccess
 {
@@ -65,7 +66,7 @@ class Transactions implements \Countable, \Iterator, \ArrayAccess
     public function offsetSet($offset, $value): void
     {
         if (!is_int($value)) {
-            throw new \InvalidArgumentException("Must be an int");
+            throw new InvalidArgumentException("Must be an int");
         }
 
         if (empty($offset)) {

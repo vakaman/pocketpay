@@ -5,7 +5,7 @@ namespace App\Domain\Entity\Financial;
 use App\Domain\Entity\Currency\Money;
 use App\Domain\Enum\TransactionStatusEnum;
 use App\Domain\Exception\Transaction\CannotTransferFundsToSameWalletException;
-use App\Domain\Exception\Transaction\TransferValueCannotBeNegativeNumberException;
+use App\Domain\Exception\Transaction\ValueCannotBeNegativeNumberException;
 use App\Domain\Exception\Transaction\TransferValueCannotBeZeroException;
 use App\Domain\ValueObject\Uuid;
 use Illuminate\Support\Carbon;
@@ -96,7 +96,7 @@ class Transaction
     private function cannotBeNegativeNumber(Money $money): void
     {
         if ($money->toInt() < 0) {
-            throw new TransferValueCannotBeNegativeNumberException;
+            throw new ValueCannotBeNegativeNumberException;
         }
     }
 

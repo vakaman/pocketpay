@@ -14,7 +14,7 @@ class Header
     public readonly string $to;
     public readonly string $receiver;
     public readonly string $money;
-    public readonly ?string $reply_to;
+    public readonly ?string $replyTo;
     public readonly ?string $date;
 
     public function __construct(
@@ -24,7 +24,7 @@ class Header
         string $to,
         string $receiver,
         int $money,
-        ?string $reply_to,
+        ?string $replyTo,
         ?string $date,
     ) {
         $this->subject = Sanitize::string($subject);
@@ -33,7 +33,7 @@ class Header
         $this->to = new Email(Sanitize::email($to));
         $this->receiver = Sanitize::string($receiver);
         $this->money = (new Money($money))->toReal();
-        $this->reply_to = Sanitize::string($reply_to) ?? $this->from;
+        $this->replyTo = Sanitize::string($replyTo) ?? $this->from;
         $this->date = Carbon::createFromFormat('Y-m-d H:i:s', Sanitize::string($date));
     }
 

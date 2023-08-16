@@ -2,6 +2,8 @@
 
 namespace App\Domain\ValueObject;
 
+use Exception;
+
 class Name
 {
     public string $value;
@@ -28,7 +30,7 @@ class Name
     private function validateName(string $name): void
     {
         if (!preg_match('/^[a-zA-ZÀ-ÖØ-öø-ÿ \'-]+$/', $name)) {
-            throw new \Exception('The name provided is invalid');
+            throw new Exception('The name provided is invalid');
         };
     }
 }

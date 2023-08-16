@@ -32,7 +32,7 @@ class EmailService
             to: $emailRequest->json('headers.to'),
             receiver: $emailRequest->json('headers.receiver'),
             money: $emailRequest->json('headers.money'),
-            reply_to: $emailRequest->json('headers.reply_to'),
+            replyTo: $emailRequest->json('headers.reply_to'),
             date: $emailRequest->json('headers.date'),
         );
     }
@@ -41,7 +41,7 @@ class EmailService
     {
         return new Body(
             body: $emailRequest->json('body.message'),
-            content_type: $emailRequest->json('body.content_type'),
+            contentType: $emailRequest->json('body.content_type'),
         );
     }
 }

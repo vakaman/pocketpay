@@ -9,43 +9,45 @@ namespace App\Validations;
  */
 class Rule extends \Illuminate\Validation\Rule
 {
-    public const required = 'required';
+    public const REQUIRED = 'required';
 
-    public const uuid = 'uuid';
+    public const UUID = 'uuid';
 
-    public const email = 'email';
+    public const EMAIL = 'email';
 
-    public const nullable = 'nullable';
+    public const NULLABLE = 'nullable';
 
-    public const date = 'date';
+    public const DATE = 'date';
 
-    public const integer = 'integer';
+    public const INTEGER = 'integer';
 
-    public const string = 'string';
+    public const UNSIGNED = 'gt:0';
 
-    public const numeric = 'numeric';
+    public const STRING = 'string';
 
-    public const boolean = 'boolean';
+    public const NUMERIC = 'numeric';
 
-    public const accepted = 'accepted';
+    public const BOOLEAN = 'boolean';
 
-    public const confirmed = 'confirmed';
+    public const ACCEPTED = 'accepted';
 
-    public const cpf = 'cpf';
+    public const CONFIRMED = 'confirmed';
 
-    public const cnpj = 'cnpj';
+    public const CPF = 'cpf';
 
-    public const file = 'file';
+    public const CNPJ = 'cnpj';
 
-    public const distinct = 'distinct';
+    public const FILE = 'file';
 
-    public const array = 'array';
+    public const DISTINCT = 'distinct';
 
-    public const AlphaDash = 'alpha_dash';
+    public const ARRAY = 'array';
 
-    public const url = 'url';
+    public const ALPHA_DASH = 'alpha_dash';
 
-    public const activeUrl = 'active_url';
+    public const URL = 'url';
+
+    public const ACTIVE_URL = 'active_url';
 
     public static function between(int|float $start = 0, int|float $end = 100): string
     {
@@ -102,7 +104,7 @@ class Rule extends \Illuminate\Validation\Rule
         return "accepted_if:{$field}, {$value}";
     }
 
-    /** @example 'test' => [Rule::required, ... Rule::length(2)] */
+    /** @example 'test' => [Rule::REQUIRED, ... Rule::LENGTH(2)] */
     public static function length(int $int): array
     {
         return [self::min($int), self::max($int)];

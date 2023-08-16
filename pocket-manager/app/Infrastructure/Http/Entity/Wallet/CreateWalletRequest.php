@@ -11,8 +11,8 @@ class CreateWalletRequest extends FormRequest
     {
         return [
             'person' => [
-                Rule::required,
-                Rule::uuid
+                Rule::REQUIRED,
+                Rule::UUID
             ]
         ];
     }

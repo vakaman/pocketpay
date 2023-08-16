@@ -16,7 +16,7 @@ class Headers
     public readonly Email $to;
     public readonly Name $receiver;
     public readonly Money $money;
-    public readonly ?Email $reply_to;
+    public readonly ?Email $replyTo;
     public readonly Carbon $date;
 
     public function __construct(
@@ -26,7 +26,7 @@ class Headers
         Email $to,
         Name $receiver,
         Money $money,
-        ?string $reply_to = null,
+        ?string $replyTo = null,
         ?Carbon $date = null,
     ) {
         $this->subject = Sanitize::string($subject);
@@ -35,7 +35,7 @@ class Headers
         $this->to = $to;
         $this->receiver = $receiver;
         $this->money = $money;
-        $this->reply_to = !is_null($reply_to) ? Sanitize::string($reply_to) : $this->from;
+        $this->replyTo = !is_null($replyTo) ? Sanitize::string($replyTo) : $this->from;
         $this->date = $date ?? Carbon::now();
     }
 
@@ -48,7 +48,7 @@ class Headers
             'to' => $this->to->value,
             'receiver' => $this->receiver->value,
             'money' => $this->money->toInt(),
-            'reply_to' => $this->reply_to->value,
+            'reply_to' => $this->replyTo->value,
             'date' => $this->date->format('Y-m-d H:i:s')
         ];
     }

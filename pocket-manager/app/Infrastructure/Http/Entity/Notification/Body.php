@@ -7,12 +7,12 @@ use App\Util\Sanitize;
 class Body
 {
     public readonly string $message;
-    public readonly string $content_type;
+    public readonly string $contentType;
 
-    public function __construct(string $body, ?string $content_type = 'text/plain')
+    public function __construct(string $body, ?string $contentType = 'text/plain')
     {
         $this->message = Sanitize::string($body);
-        $this->content_type = Sanitize::string($content_type);
+        $this->contentType = Sanitize::string($contentType);
     }
 
     public function toArray(): array

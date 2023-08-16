@@ -19,7 +19,7 @@ class TransactionFailException extends \Exception
 
     public static function setMessage(string $message): string
     {
-        return self::$newMessage;
+        return self::$newMessage = $message;
     }
 
     public function getTransaction(): Transaction

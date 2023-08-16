@@ -28,7 +28,7 @@ class WalletNotBelongsToPersonException extends \Exception
 
     public static function setMessage(string $message): string
     {
-        return self::$newMessage;
+        return self::$newMessage = $message;
     }
 
     public function getWalletUuid(): string

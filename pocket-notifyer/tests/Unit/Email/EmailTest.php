@@ -19,7 +19,7 @@ class EmailTest extends TestCase
             to: 'to@email.com.br',
             receiver: 'Receiver Name',
             money: 100,
-            reply_to: 'from@email.com.br',
+            replyTo: 'from@email.com.br',
             date: '2023-08-10 12:25:00',
         );
 
@@ -61,7 +61,7 @@ class EmailTest extends TestCase
             to: 'to@email.com.br',
             receiver: 'Receiver Name',
             money: 100,
-            reply_to: 'from@email.com.br',
+            replyTo: 'from@email.com.br',
             date: '2023-08-10 12:25:00',
         );
 

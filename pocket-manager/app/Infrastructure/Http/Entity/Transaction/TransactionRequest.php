@@ -11,17 +11,17 @@ class TransactionRequest extends FormRequest
     {
         return [
             'from_wallet' => [
-                Rule::required,
-                Rule::uuid
+                Rule::REQUIRED,
+                Rule::UUID
             ],
             'to_wallet' => [
-                Rule::required,
-                Rule::uuid
+                Rule::REQUIRED,
+                Rule::UUID
             ],
             'value' => [
-                Rule::required,
-                Rule::integer,
-                Rule::unsigned,
+                Rule::REQUIRED,
+                Rule::INTEGER,
+                Rule::UNSIGNED,
                 Rule::min(1)
             ]
         ];

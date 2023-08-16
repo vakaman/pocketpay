@@ -2,7 +2,7 @@
 
 namespace App\Domain\Exception\Transaction;
 
-class TransferValueCannotBeNegativeNumberException extends \Exception
+class ValueCannotBeNegativeNumberException extends \Exception
 {
     public static string $newMessage = 'Transfer value, cannot be negative number.';
 
@@ -13,6 +13,6 @@ class TransferValueCannotBeNegativeNumberException extends \Exception
 
     public static function setMessage(string $message): string
     {
-        return self::$newMessage;
+        return self::$newMessage = $message;
     }
 }

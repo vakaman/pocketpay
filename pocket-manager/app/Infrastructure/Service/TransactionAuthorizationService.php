@@ -15,7 +15,7 @@ use Illuminate\Http\Client\Response;
 class TransactionAuthorizationService implements TransactionAuthorizationServiceInterface
 {
     public function __construct(
-        private WalletServiceInterface $walletServiceInterface
+        private WalletServiceInterface $walletService
     ) {
     }
 
@@ -32,7 +32,7 @@ class TransactionAuthorizationService implements TransactionAuthorizationService
 
     public function personCanTransferFunds(Transaction $transaction): bool
     {
-        $person = $this->walletServiceInterface->getPerson(
+        $person = $this->walletService->getPerson(
             new Wallet($transaction->from)
         );
 
