@@ -3,6 +3,7 @@
 namespace App\Domain\Entity\Financial;
 
 use App\Domain\Entity\Currency\Money;
+use App\Domain\Enum\TransactionStatusEnum;
 use App\Domain\Exception\Transaction\CannotTransferFundsToSameWalletException;
 use App\Domain\Exception\Transaction\TransferValueCannotBeNegativeNumberException;
 use App\Domain\Exception\Transaction\TransferValueCannotBeZeroException;
@@ -12,6 +13,7 @@ use Ramsey\Uuid\Uuid as UuidGenerator;
 
 class Transaction
 {
+    public readonly int $status;
     public readonly Uuid $id;
     public readonly Uuid $from;
     public readonly Uuid $to;
@@ -25,8 +27,10 @@ class Transaction
         Money $value,
         ?Uuid $id = null,
         ?Carbon $created_at = null,
-        ?Carbon $updated_at = null
+        ?Carbon $updated_at = null,
+        int $status = null
     ) {
+        $this->status = $status ?? TransactionStatusEnum::PENDINIG->value;
         $this->from = $from;
         $this->to = $to;
         $this->value = $value;
@@ -40,6 +44,7 @@ class Transaction
     public static function toEntity(array $model): Transaction
     {
         return new self(
+            status: $model['status_id'],
             from: new Uuid($model['from']),
             to: new Uuid($model['to']),
             value: new Money($model['value']),
@@ -52,6 +57,7 @@ class Transaction
     public static function fromEntity(Transaction $transaction): array
     {
         return [
+            "status_id" => $transaction->status,
             "from" => $transaction->from->value,
             "to" => $transaction->to->value,
             "value" => $transaction->value->toInt(),
