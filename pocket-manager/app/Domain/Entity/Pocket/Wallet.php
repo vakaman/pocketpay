@@ -34,7 +34,7 @@ class Wallet
     public static function fromEntity(Wallet $wallet): array
     {
         return [
-            "id" => $wallet->id,
+            "id" => $wallet->id->value,
             "money" => $wallet->money->toInt(),
             "main" => $wallet->main
         ];
