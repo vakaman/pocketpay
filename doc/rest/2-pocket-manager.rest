@@ -11,28 +11,26 @@ GET {{ host_wallet_manager }}/api/transaction/history/{{ wallet_manager_person_i
 POST {{ host_wallet_manager }}/api/transaction
 Content-Type: application/json
 {
-    "from_wallet": "a54995f0-cd55-450a-9b21-99c42813a572",
-    "to_wallet": "ce1be501-24fe-45fa-bdbe-b1a4175d93d1",
-    "value": 100
+    "from_wallet": "a9d4a0ce-b310-4410-ad88-7243bd4f442f",
+    "to_wallet": "55fd5695-1860-4a22-adeb-f149877c733d",
+    "value": 150
 }
 
 ### Create a customer wallet
 POST {{ host_wallet_manager }}/api/wallet
 Content-Type: application/json
 {
-    "person": "b764d6e9-835e-436b-931f-58d45763f379"
+    "person": "{{ wallet_manager_person_id }}"
 }
 
-### Set a client pocket as main wallet
-PATCH {{ host_wallet_manager }}/api/wallet/main
+### Set a client wallet as main
+PATCH {{ host_wallet_manager }}/api/wallet/main/a9d4a0ce-b310-4410-ad88-7243bd4f442f
 Content-Type: application/json
-{
-    "id": "a54995f0-cd55-450a-9b21-99c42813a572"
-}
 
-### Set a client pocket as main Wallet
-PATCH {{ host_wallet_manager }}/api/Wallet/main
+### get a main wallet's client
+GET {{ host_wallet_manager }}/api/wallet/main/person/{{ wallet_manager_person_id }}
 Content-Type: application/json
-{
-    "id": "a54995f0-cd55-450a-9b21-99c42813a572"
-}
+
+### get all client's wallet
+GET {{ host_wallet_manager }}/api/wallet/all/person/{{ wallet_manager_person_id }}
+Content-Type: application/json
