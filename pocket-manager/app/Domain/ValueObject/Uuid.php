@@ -14,7 +14,7 @@ class Uuid
     private function verifyUuid(string $uuid): string
     {
         if (!isUuid($uuid)) {
-            throw new \Exception('Inválid Uuid value');
+            throw new \Exception('Inválid Uuid value, uuid: ' . $uuid);
         }
 
         return $uuid;
