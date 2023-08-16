@@ -6,6 +6,7 @@ use App\Domain\Entity\Financial\Transaction;
 use App\Domain\Entity\Currency\Money;
 use App\Domain\Entity\Financial\TransactionHistory;
 use App\Domain\Entity\Financial\Transactions;
+use App\Domain\Exception\Transaction\TransactionUnauthorizedException;
 use App\Domain\Exception\WalletDontHaveFundsException;
 use App\Domain\Repository\PersonServiceInterface;
 use App\Domain\Repository\TransactionRepositoryInterface;
@@ -188,5 +189,73 @@ class TransactionTest extends TestCase
                 "value" => 111
             ]
         ])->assertNotFound();
+    }
+
+    public function test_cant_do_transfer_when_person_unauthorized()
+    {
+        $transaction = [
+            "from_wallet" => "fbcd05e1-9530-44e2-b0a2-de551b260c18",
+            "to_wallet" => "65dacab7-375f-4628-a30b-c6c34eeb3268",
+            "value" => 111
+        ];
+
+        $this->mock(TransactionAuthorizationServiceInterface::class)
+            ->shouldReceive('personCanTransferFunds')
+            ->andReturn(false);
+
+        $response = $this->postJson('/api/transaction', $transaction);
+
+        $response->assertJson([
+            "error" => "The informed individual does not have permission to perform transfers.",
+            "request" => [
+                "from_wallet" => "fbcd05e1-9530-44e2-b0a2-de551b260c18",
+                "to_wallet" => "65dacab7-375f-4628-a30b-c6c34eeb3268",
+                "value" => 111
+            ]
+        ])->assertForbidden();
+    }
+
+    public function test_cant_do_transfer_when_unauthorized()
+    {
+        $transaction = [
+            "from_wallet" => "fbcd05e1-9530-44e2-b0a2-de551b260c18",
+            "to_wallet" => "65dacab7-375f-4628-a30b-c6c34eeb3268",
+            "value" => 111
+        ];
+
+
+        $this->mock(TransactionAuthorizationServiceInterface::class)
+            ->shouldReceive('personCanTransferFunds')
+            ->once()
+            ->andReturn(true)
+            ->shouldReceive('canTransact')
+            ->andThrow(
+                new TransactionUnauthorizedException(
+                    new Transaction(
+                        from: new Uuid(uuid: $transaction['from_wallet']),
+                        to: new Uuid(uuid: $transaction['to_wallet']),
+                        value: new Money($transaction['value']),
+                    )
+                )
+            );
+
+        $this->mock(TransactionRepositoryInterface::class)
+            ->shouldReceive('transactionAlreadyBeenDone')
+            ->andReturnFalse();
+
+        $this->mock(WalletServiceInterface::class)
+            ->shouldReceive('walletsExists', 'haveFunds')
+            ->andReturnTrue();
+
+        $response = $this->postJson('/api/transaction', $transaction);
+
+        $response->assertJson([
+            "error" => "The transaction was not authorized.",
+            "request" => [
+                "from_wallet" => "fbcd05e1-9530-44e2-b0a2-de551b260c18",
+                "to_wallet" => "65dacab7-375f-4628-a30b-c6c34eeb3268",
+                "value" => 111
+            ]
+        ])->assertForbidden();
     }
 }
