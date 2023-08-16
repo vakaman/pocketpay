@@ -17,6 +17,9 @@ class Body
 
     public function toArray(): array
     {
-        return (array) $this;
+        return [
+            'message' => $this->message,
+            'content_type' => $this->contentType,
+        ];
     }
 }
