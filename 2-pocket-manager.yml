@@ -9,6 +9,9 @@ networks:
     pocketpay-manager-external:
         name: pocketpay-manager-external
         external: true
+    pocketpay-notifyer-external:
+        name: pocketpay-notifyer-external
+        external: true
 
 services:
 
@@ -43,9 +46,11 @@ services:
             - "host.docker.internal:${PHPFPM_XDEBUG_HOST_IP}"
         networks:
             - pocketpay-manager-internal
+            - pocketpay-notifyer-external
         restart: "on-failure"
         volumes:
             - ./pocket-manager:/app
+            - ./docker/pocket-manager/php-fpm/php-xdebug.ini:/usr/local/etc/php/conf.d/xx-php-xdebug.ini
         env_file:
             - pocket-manager/.env
         depends_on:
@@ -61,6 +66,7 @@ services:
         dns: 1.1.1.1
         networks:
             - pocketpay-manager-internal
+            - pocketpay-notifyer-external
         restart: "on-failure"
         volumes:
             - ./pocket-manager:/app
@@ -95,13 +101,13 @@ services:
             retries: 5
 
     pocketpay-manager-queue:
-        image: rabbitmq:3.9-management-alpine
+        image: rabbitmq:3.12.2-management-alpine
         container_name: pocketpay-manager-queue
         hostname: pocketpay-manager-queue
         container_name: pocketpay-manager-queue
         restart: "on-failure"
         env_file:
-            - pocket-notifyer/.env
+            - pocket-manager/.env
         networks:
             - pocketpay-manager-internal
         ports:
