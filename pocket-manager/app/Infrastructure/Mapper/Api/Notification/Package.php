@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infrastructure\Mapper\Api;
+namespace App\Infrastructure\Mapper\Api\Notification;
 
 use App\Infrastructure\Http\Entity\Notification\Body;
 use App\Infrastructure\Http\Entity\Notification\Headers;
