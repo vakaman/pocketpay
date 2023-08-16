@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Domain\Entity\Financial\Transaction;
+use App\Domain\Enum\TransactionStatusEnum;
 use App\Service\Interfaces\TransactionServiceInterface;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -25,6 +26,11 @@ class TransferFunds implements ShouldQueue
 
     public function handle(TransactionServiceInterface $transactionService): void
     {
-        $transactionService->transact($this->transaction);
+        try {
+            $transactionService->changeStatus($this->transaction, TransactionStatusEnum::PROCESSING);
+            $transactionService->transact($this->transaction);
+        } catch (\Exception $e) {
+            $transactionService->changeStatus($this->transaction, TransactionStatusEnum::ERROR);
+        }
     }
 }
