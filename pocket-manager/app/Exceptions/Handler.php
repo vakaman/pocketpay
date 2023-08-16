@@ -3,7 +3,9 @@
 namespace App\Exceptions;
 
 use App\Domain\Exception\People\PersonDoesNotExistsException;
+use App\Domain\Exception\Transaction\PersonUnauthorizedToDoTransferException;
 use App\Domain\Exception\Transaction\TransactionAlreadyBeenDoneException;
+use App\Domain\Exception\Transaction\TransactionUnauthorizedException;
 use App\Domain\Exception\WalletDontHaveFundsException;
 use App\Domain\Exception\WalletNotBelongsToPersonException;
 use App\Domain\Exception\WalletNotExistsException;
@@ -66,6 +68,19 @@ class Handler extends ExceptionHandler
             ], StatusCode::FORBIDDEN->value);
         });
 
+        $this->renderable(function (PersonUnauthorizedToDoTransferException $e, Request $request) {
+            return response()->json([
+                'error' => $e->getMessage(),
+                'request' => $request->all()
+            ], StatusCode::FORBIDDEN->value);
+        });
+
+        $this->renderable(function (TransactionUnauthorizedException $e, Request $request) {
+            return response()->json([
+                'error' => $e->getMessage(),
+                'request' => $request->all()
+            ], StatusCode::FORBIDDEN->value);
+        });
 
         $this->renderable(function (HttpClientException $e, Request $request) {
             return response()->json([
