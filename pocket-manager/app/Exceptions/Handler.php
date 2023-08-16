@@ -2,10 +2,14 @@
 
 namespace App\Exceptions;
 
+use App\Domain\Exception\People\PersonDoesNotExistsException;
+use App\Domain\Exception\Transaction\TransactionAlreadyBeenDoneException;
 use App\Domain\Exception\WalletDontHaveFundsException;
+use App\Domain\Exception\WalletNotBelongsToPersonException;
 use App\Domain\Exception\WalletNotExistsException;
 use App\Infrastructure\Http\Entity\StatusCode;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Http\Request;
 
 class Handler extends ExceptionHandler
@@ -26,7 +30,7 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'error' => $e->getMessage(),
                 'wallet' => $e->getWallet()->id->value,
-                'transaction' => $request->all()
+                'request' => $request->all()
             ], StatusCode::NOT_FOUND->value);
         });
 
@@ -34,8 +38,39 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'error' => $e->getMessage(),
                 'wallet' => $e->getWalletUuid(),
-                'transaction' => $request->all()
+                'request' => $request->all()
             ], StatusCode::FORBIDDEN->value);
+        });
+
+        $this->renderable(function (WalletNotBelongsToPersonException $e, Request $request) {
+            return response()->json([
+                'error' => $e->getMessage(),
+                'wallet' => $e->getWalletUuid(),
+                'person' => $e->getPersonUuid(),
+                'request' => $request->all()
+            ], StatusCode::FORBIDDEN->value);
+        });
+
+        $this->renderable(function (PersonDoesNotExistsException $e, Request $request) {
+            return response()->json([
+                'error' => $e->getMessage(),
+                'person' => $e->getPerson()->id->value,
+                'request' => $request->all()
+            ], StatusCode::NOT_FOUND->value);
+        });
+
+        $this->renderable(function (TransactionAlreadyBeenDoneException $e, Request $request) {
+            return response()->json([
+                'error' => $e->getMessage(),
+                'transaction' => $e->getTransaction()->id->value
+            ], StatusCode::FORBIDDEN->value);
+        });
+
+
+        $this->renderable(function (HttpClientException $e, Request $request) {
+            return response()->json([
+                'error' => "The transaction could not be completed, please try again later.",
+            ], StatusCode::SERVER_UNAVAILABLE->value);
         });
     }
 }
