@@ -13,7 +13,7 @@ use Ramsey\Uuid\Uuid as UuidGenerator;
 
 class Transaction
 {
-    public readonly int $status;
+    public int $status;
     public readonly Uuid $id;
     public readonly Uuid $from;
     public readonly Uuid $to;
@@ -65,6 +65,13 @@ class Transaction
             "created_at" => $transaction->created_at->format('Y-m-d H:i:s'),
             "updated_at" => $transaction->updated_at->format('Y-m-d H:i:s')
         ];
+    }
+
+    public function setStatus(TransactionStatusEnum $status): bool
+    {
+        $this->status = $status->value;
+
+        return true;
     }
 
     private function validations(): void
