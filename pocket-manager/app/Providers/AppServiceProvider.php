@@ -11,7 +11,9 @@ use App\Infrastructure\Repository\TransactionRepository;
 use App\Infrastructure\Repository\WalletRepository;
 use App\Infrastructure\Service\NotifyerService;
 use App\Infrastructure\Service\PersonService;
+use App\Infrastructure\Service\TransactionAuthorizationService;
 use App\Service\Interfaces\NotifyerServiceInterface;
+use App\Service\Interfaces\TransactionAuthorizationServiceInterface;
 use App\Service\Interfaces\TransactionServiceInterface;
 use App\Service\Interfaces\WalletServiceInterface;
 use App\Service\TransactionService;
@@ -32,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(TransactionServiceInterface::class, TransactionService::class);
         $this->app->bind(TransactionRepositoryInterface::class, TransactionRepository::class);
+        $this->app->bind(TransactionAuthorizationServiceInterface::class, TransactionAuthorizationService::class);
 
         $this->app->bind(WalletServiceInterface::class, WalletService::class);
         $this->app->bind(WalletRepositoryInterface::class, WalletRepository::class);
