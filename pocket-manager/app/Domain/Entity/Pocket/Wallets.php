@@ -2,6 +2,9 @@
 
 namespace App\Domain\Entity\Pocket;
 
+use App\Domain\Entity\Currency\Money;
+use App\Domain\ValueObject\Uuid;
+
 class Wallets implements \Countable, \Iterator, \ArrayAccess
 {
     private array $wallets = [];
@@ -11,6 +14,38 @@ class Wallets implements \Countable, \Iterator, \ArrayAccess
     public function __construct(array $wallets)
     {
         $this->setWallets($wallets);
+    }
+
+    public function ids(): array
+    {
+        return array_map(
+            fn($wallet) => $wallet->id->value,
+            $this->wallets
+        );
+    }
+
+    public function toArray()
+    {
+        return array_map(function ($wallet) {
+            return $wallet::fromEntity($wallet);
+        }, $this->wallets);
+    }
+
+    public static function toEntityes(array $wallets)
+    {
+        return new self(array_map(
+            fn ($wallet) => new Wallet(
+                new Uuid($wallet['id']),
+                new Money($wallet['money']),
+                $wallet['main']
+            ),
+            $wallets
+        ));
+    }
+
+    public static function from(array $wallets)
+    {
+        self::validateIfHasOnlyWalletObjectsInArray($wallets);
     }
 
     public function getWallets(): array
@@ -84,6 +119,13 @@ class Wallets implements \Countable, \Iterator, \ArrayAccess
                 money: $wallet->money,
                 main: $wallet->main
             );
+        }
+    }
+
+    private static function validateIfHasOnlyWalletObjectsInArray(array $wallets)
+    {
+        if (!array_walk($wallets, fn ($wallet) => $wallet instanceof Wallet)) {
+            throw new \Exception('The array of wallets, dont have a instance of Wallet:class valid.');
         }
     }
 }
