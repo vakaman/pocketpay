@@ -22,8 +22,8 @@ class WalletDontHaveFundsException extends \Exception
         return self::$newMessage;
     }
 
-    public function getWalletUuid(): Uuid
+    public function getWalletUuid(): string
     {
-        return $this->wallet;
+        return $this->wallet->value;
     }
 }

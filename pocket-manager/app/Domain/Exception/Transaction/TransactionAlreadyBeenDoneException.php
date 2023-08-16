@@ -4,9 +4,9 @@ namespace App\Domain\Exception\Transaction;
 
 use App\Domain\Entity\Financial\Transaction;
 
-class TransactionFailException extends \Exception
+class TransactionAlreadyBeenDoneException extends \Exception
 {
-    public static string $newMessage = 'Transaction failed.';
+    public static string $newMessage = 'The provided transaction has already been completed and cannot be done again.';
 
     public function __construct(
         private Transaction|array $transaction,
