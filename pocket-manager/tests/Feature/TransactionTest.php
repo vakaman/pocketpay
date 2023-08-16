@@ -6,10 +6,12 @@ use App\Domain\Entity\Financial\Transaction;
 use App\Domain\Entity\Currency\Money;
 use App\Domain\Entity\Financial\TransactionHistory;
 use App\Domain\Entity\Financial\Transactions;
+use App\Domain\Exception\WalletDontHaveFundsException;
 use App\Domain\Repository\PersonServiceInterface;
 use App\Domain\Repository\TransactionRepositoryInterface;
 use App\Domain\Repository\WalletRepositoryInterface;
 use App\Domain\ValueObject\Uuid;
+use App\Service\Interfaces\TransactionAuthorizationServiceInterface;
 use App\Service\Interfaces\WalletServiceInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Carbon;
@@ -28,8 +30,8 @@ class TransactionTest extends TestCase
                     to: new Uuid('84065074-097c-480a-8313-3930407f75f1'),
                     value: new Money(100),
                     id: new Uuid('7685ceb6-292d-4fa4-a2d2-2e0a78f8dac7'),
-                    created_at: new Carbon('2023-08-12 15:00:00.000'),
-                    updated_at: new Carbon('2023-08-12 15:00:00.000')
+                    createdAt: new Carbon('2023-08-12 15:00:00.000'),
+                    updatedAt: new Carbon('2023-08-12 15:00:00.000')
                 )
             );
 
@@ -90,15 +92,16 @@ class TransactionTest extends TestCase
             );
 
         $this->mock(WalletServiceInterface::class)
-            ->shouldReceive(['needExists', 'belongsToPerson'])
-            ->andReturnTrue();
+            ->shouldReceive('needExists', 'belongsToPerson')
+            ->once()
+            ->andReturn(true, true);
+
+        $response = $this
+            ->get('/api/transaction/history/5cb0b7ec-07a2-4185-a8ca-ff9160ec4d2c/fbcd05e1-9530-44e2-b0a2-de551b260c18');
 
         $this->mock(PersonServiceInterface::class)
             ->shouldReceive('needExists')
             ->andReturnTrue();
-
-        $response = $this
-            ->get('/api/transaction/history/5cb0b7ec-07a2-4185-a8ca-ff9160ec4d2c/fbcd05e1-9530-44e2-b0a2-de551b260c18');
 
         $expectedHistory = [
             [
@@ -133,15 +136,28 @@ class TransactionTest extends TestCase
         ];
 
         $this->mock(TransactionRepositoryInterface::class)
-            ->shouldReceive('haveFunds')
-            ->andReturn(false);
+            ->shouldReceive('transactionAlreadyBeenDone')
+            ->once()
+            ->andReturnFalse();
+
+        $this->mock(TransactionAuthorizationServiceInterface::class)
+            ->shouldReceive('personCanTransferFunds')
+            ->once()
+            ->andReturn(true);
+
+
+        $this->mock(WalletServiceInterface::class)
+            ->shouldReceive('haveFunds')->shouldReceive('walletsExists')
+            ->once()
+            ->andReturn(true)
+            ->andThrow(new WalletDontHaveFundsException(new Uuid('fbcd05e1-9530-44e2-b0a2-de551b260c18')));
 
         $response = $this->postJson('/api/transaction', $transaction);
 
         $response->assertJson([
             "error" => "The provided wallet does not have sufficient funds.",
             "wallet" => "fbcd05e1-9530-44e2-b0a2-de551b260c18",
-            "transaction" => [
+            "request" => [
                 "from_wallet" => "fbcd05e1-9530-44e2-b0a2-de551b260c18",
                 "to_wallet" => "65dacab7-375f-4628-a30b-c6c34eeb3268",
                 "value" => 111
@@ -166,7 +182,7 @@ class TransactionTest extends TestCase
         $response->assertJson([
             "error" => "The wallet you entered does not exist.",
             "wallet" => "fbcd05e1-9530-44e2-b0a2-de551b260c18",
-            "transaction" => [
+            "request" => [
                 "from_wallet" => "fbcd05e1-9530-44e2-b0a2-de551b260c18",
                 "to_wallet" => "65dacab7-375f-4628-a30b-c6c34eeb3268",
                 "value" => 111
