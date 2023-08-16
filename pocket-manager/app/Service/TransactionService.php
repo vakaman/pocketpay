@@ -7,21 +7,25 @@ use App\Domain\Entity\Financial\TransactionHistory;
 use App\Domain\Entity\People\Person;
 use App\Domain\Entity\Pocket\Wallet;
 use App\Domain\Entity\Pocket\Wallets;
+use App\Domain\Exception\Transaction\TransactionAlreadyBeenDoneException;
 use App\Domain\Exception\Transaction\TransactionFailException;
-use App\Domain\Exception\Transaction\TransactionUnauthorized;
+use App\Domain\Repository\PersonServiceInterface;
 use App\Domain\Repository\TransactionRepositoryInterface;
 use App\Domain\ValueObject\Uuid;
-use App\Infrastructure\Service\NotifyerService;
 use App\Infrastructure\Service\TransactionAuthorizationService;
 use App\Jobs\TransferFunds;
+use App\Service\Interfaces\NotifyerServiceInterface;
+use App\Service\Interfaces\TransactionServiceInterface;
+use App\Service\Interfaces\WalletServiceInterface;
 
-class TransactionService
+class TransactionService implements TransactionServiceInterface
 {
     public function __construct(
-        private WalletService $walletService,
+        private WalletServiceInterface $walletService,
+        private PersonServiceInterface $personService,
         private TransactionRepositoryInterface $transactionRepository,
         private TransactionAuthorizationService $authorizationService,
-        private NotifyerService $notifyerService
+        private NotifyerServiceInterface $notifyerService
     ) {
     }
 
@@ -34,12 +38,15 @@ class TransactionService
 
     public function history(Person $person, Uuid $wallet): TransactionHistory
     {
+        $this->walletService->needExists(new Wallet($wallet));
+        $this->personService->needExists($person);
+
         $this->walletService->belongsToPerson($wallet, $person);
 
         return $this->transactionRepository->history($wallet);
     }
 
-    public function createTransaction(Transaction $transaction)
+    public function createTransaction(Transaction $transaction): void
     {
         TransferFunds::dispatchIf(
             $this->canTransact($transaction),
@@ -54,13 +61,15 @@ class TransactionService
 
     private function commitTransaction(Transaction $transaction): void
     {
-        if (!$this->canTransact($transaction)) {
-            throw new TransactionUnauthorized($transaction);
-        }
+        $this->canTransact($transaction);
 
         throw_unless_transaction(
-            fn () => $this->transactionRepository->transact($transaction) &&
-                $this->notifyerService->send($transaction),
+            fn () =>
+            $this->transactionRepository->transact($transaction) &&
+                $this->transactionRepository->regiterTransactHistory($transaction) &&
+                $this->notifyerService->send(
+                    $this->notifyerService->notificationPackage($transaction)
+                ),
             TransactionFailException::class,
             $transaction
         );
@@ -68,6 +77,7 @@ class TransactionService
 
     private function canTransact(Transaction $transaction): bool
     {
+        $this->transactionAlreadyBeenDone($transaction);
         $this->walletExists($transaction);
         $this->haveFunds($transaction);
 
@@ -90,5 +100,14 @@ class TransactionService
             $transaction->from,
             $transaction->value
         );
+    }
+
+    private function transactionAlreadyBeenDone(Transaction $transaction): bool
+    {
+        if ($this->transactionRepository->transactionAlreadyBeenDone($transaction)) {
+            throw new TransactionAlreadyBeenDoneException($transaction);
+        }
+
+        return true;
     }
 }
