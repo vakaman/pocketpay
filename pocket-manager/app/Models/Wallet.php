@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\CastAttributes\Money;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,12 +12,21 @@ class Wallet extends Model
 
     protected $table = 'wallets';
 
+    protected $keyType = 'string';
+
     protected $casts = [
-        'id' => 'string',
-        'money' => Money::class
+        'id' => 'string'
     ];
 
-    public function person(): BelongsToMany
+    protected $fillable = [
+        'id',
+        'money',
+        'main'
+    ];
+
+    public $timestamps = false;
+
+    public function people(): BelongsToMany
     {
         return $this->belongsToMany(Person::class)->using(PersonWallet::class);
     }
@@ -28,4 +36,3 @@ class Wallet extends Model
         return $this->belongsToMany(Transaction::class)->using(WalletTransactions::class);
     }
 }
-

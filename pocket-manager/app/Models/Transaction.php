@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Domain\ValueObject\Uuid;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Transaction extends Model
 {
@@ -19,13 +21,39 @@ class Transaction extends Model
         'id' => 'string'
     ];
 
+    protected $fillable = [
+        'id',
+        'status_id',
+        'from',
+        'to',
+        'value',
+        'created_at',
+        'updated_at',
+    ];
+
     public function wallets(): belongsToMany
     {
         return $this->belongsToMany(Wallet::class)->using(WalletTransactions::class);
     }
 
-    public function status(): BelongsTo
+    public function statuses(): HasOne
     {
-        return $this->belongsTo(Status::class)->using(TransactionStatus::class);
+        return $this->hasOne(Statuses::class, 'id', 'status_id');
+        // return $this->belongsToMany(
+        //     Statuses::class,
+        //     'statuses',
+        //     'id',
+        //     'id'
+        //     )->using(TransactionStatus::class);
+    }
+
+    public function scopeId(Builder $query, Uuid $id): void
+    {
+        $query->where('id',  $id->value);
+    }
+
+    public function scopeAlreadyBeenDone(Builder $query, array $status): void
+    {
+        $query->whereIn('status_id', $status);
     }
 }

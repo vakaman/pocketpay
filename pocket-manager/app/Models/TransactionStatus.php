@@ -8,4 +8,8 @@ class TransactionStatus extends Pivot
 {
     protected $table = 'transaction_status';
 
+    protected $casts = [
+        'transaction_id' => 'string',
+        'status_id' => 'int'
+    ];
 }
