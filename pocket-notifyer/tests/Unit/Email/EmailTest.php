@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Email;
 
 use App\Domain\Entity\Email\Body;
 use App\Domain\Entity\Email\Envelope;
