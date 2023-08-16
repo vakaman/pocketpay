@@ -88,8 +88,8 @@ class Transactions implements \Countable, \Iterator, \ArrayAccess
                 to: new Uuid($transaction['to']),
                 id: new Uuid($transaction['id']),
                 value: new Money($transaction['value']),
-                created_at: new Carbon($transaction['created_at']),
-                updated_at: new Carbon($transaction['updated_at'])
+                createdAt: new Carbon($transaction['created_at']),
+                updatedAt: new Carbon($transaction['updated_at'])
             );
         }
     }

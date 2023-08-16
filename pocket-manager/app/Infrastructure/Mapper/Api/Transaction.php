@@ -19,8 +19,8 @@ class Transaction
                 'from' => $this->transaction->from->value,
                 'to' => $this->transaction->to->value,
                 'value' => $this->transaction->value->toInt(),
-                'created_at' => $this->transaction->created_at,
-                'updated_at' => $this->transaction->updated_at,
+                'created_at' => $this->transaction->createdAt,
+                'updated_at' => $this->transaction->updatedAt,
             ]
         ];
     }

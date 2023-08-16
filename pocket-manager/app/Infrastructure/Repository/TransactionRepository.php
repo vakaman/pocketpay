@@ -66,8 +66,8 @@ class TransactionRepository implements TransactionRepositoryInterface
                 'from' => $transaction->from->value,
                 'to' => $transaction->to->value,
                 'value' => $transaction->value->toInt(),
-                'created_at' => $transaction->created_at,
-                'updated_at' => $transaction->updated_at
+                'created_at' => $transaction->createdAt,
+                'updated_at' => $transaction->updatedAt
             ]
         );
 

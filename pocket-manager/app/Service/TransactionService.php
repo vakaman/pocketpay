@@ -13,9 +13,9 @@ use App\Domain\Exception\Transaction\TransactionFailException;
 use App\Domain\Repository\PersonServiceInterface;
 use App\Domain\Repository\TransactionRepositoryInterface;
 use App\Domain\ValueObject\Uuid;
-use App\Infrastructure\Service\TransactionAuthorizationService;
 use App\Jobs\TransferFunds;
 use App\Service\Interfaces\NotifyerServiceInterface;
+use App\Service\Interfaces\TransactionAuthorizationServiceInterface;
 use App\Service\Interfaces\TransactionServiceInterface;
 use App\Service\Interfaces\WalletServiceInterface;
 
@@ -25,7 +25,7 @@ class TransactionService implements TransactionServiceInterface
         private WalletServiceInterface $walletService,
         private PersonServiceInterface $personService,
         private TransactionRepositoryInterface $transactionRepository,
-        private TransactionAuthorizationService $authorizationService,
+        private TransactionAuthorizationServiceInterface $authorizationService,
         private NotifyerServiceInterface $notifyerService
     ) {
     }
@@ -41,7 +41,6 @@ class TransactionService implements TransactionServiceInterface
     {
         $this->walletService->needExists(new Wallet($wallet));
         $this->personService->needExists($person);
-
         $this->walletService->belongsToPerson($wallet, $person);
 
         return $this->transactionRepository->history($wallet);

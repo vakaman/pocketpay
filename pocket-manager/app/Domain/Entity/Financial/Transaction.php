@@ -18,16 +18,16 @@ class Transaction
     public readonly Uuid $from;
     public readonly Uuid $to;
     public readonly Money $value;
-    public readonly Carbon $created_at;
-    public readonly Carbon $updated_at;
+    public readonly Carbon $createdAt;
+    public readonly Carbon $updatedAt;
 
     public function __construct(
         Uuid $from,
         Uuid $to,
         Money $value,
         ?Uuid $id = null,
-        ?Carbon $created_at = null,
-        ?Carbon $updated_at = null,
+        ?Carbon $createdAt = null,
+        ?Carbon $updatedAt = null,
         int $status = null
     ) {
         $this->status = $status ?? TransactionStatusEnum::PENDINIG->value;
@@ -35,8 +35,8 @@ class Transaction
         $this->to = $to;
         $this->value = $value;
         $this->id = $id ?? new Uuid((UuidGenerator::uuid4())->toString());
-        $this->created_at = $created_at ?? Carbon::now();
-        $this->updated_at = $updated_at ?? Carbon::now();
+        $this->createdAt = $createdAt ?? Carbon::now();
+        $this->updatedAt = $updatedAt ?? Carbon::now();
 
         $this->validations();
     }
@@ -49,8 +49,8 @@ class Transaction
             to: new Uuid($model['to']),
             value: new Money($model['value']),
             id: new Uuid($model['id']),
-            created_at: new Carbon($model['created_at']),
-            updated_at: new Carbon($model['updated_at'])
+            createdAt: new Carbon($model['created_at']),
+            updatedAt: new Carbon($model['updated_at'])
         );
     }
 
@@ -62,8 +62,8 @@ class Transaction
             "to" => $transaction->to->value,
             "value" => $transaction->value->toInt(),
             "id" => $transaction->id->value,
-            "created_at" => $transaction->created_at->format('Y-m-d H:i:s'),
-            "updated_at" => $transaction->updated_at->format('Y-m-d H:i:s')
+            "created_at" => $transaction->createdAt->format('Y-m-d H:i:s'),
+            "updated_at" => $transaction->updatedAt->format('Y-m-d H:i:s')
         ];
     }
 

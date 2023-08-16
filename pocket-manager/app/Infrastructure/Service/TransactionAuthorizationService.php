@@ -6,12 +6,13 @@ use App\Domain\Entity\Financial\Transaction;
 use App\Domain\Entity\People\Person;
 use App\Domain\Entity\Pocket\Wallet;
 use App\Domain\Exception\Transaction\TransactionUnauthorized;
+use App\Service\Interfaces\TransactionAuthorizationServiceInterface;
 use App\Service\Interfaces\WalletServiceInterface;
 use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\Response;
 
-class TransactionAuthorizationService
+class TransactionAuthorizationService implements TransactionAuthorizationServiceInterface
 {
     public function __construct(
         private WalletServiceInterface $walletServiceInterface
@@ -29,7 +30,7 @@ class TransactionAuthorizationService
         return true;
     }
 
-    public function personCanTransferFunds(Transaction $transaction)
+    public function personCanTransferFunds(Transaction $transaction): bool
     {
         $person = $this->walletServiceInterface->getPerson(
             new Wallet($transaction->from)
