@@ -84,11 +84,30 @@ class TransactionService implements TransactionServiceInterface
 
     private function canTransact(Transaction $transaction): bool
     {
+        $this->personCanTransferFunds($transaction);
         $this->transactionAlreadyBeenDone($transaction);
         $this->walletExists($transaction);
         $this->haveFunds($transaction);
 
         return $this->authorizationService->canTransact($transaction);
+    }
+
+    private function personCanTransferFunds(Transaction $transaction): bool
+    {
+        if (!$this->authorizationService->personCanTransferFunds($transaction)) {
+            throw new TransactionAlreadyBeenDoneException($transaction);
+        }
+
+        return true;
+    }
+
+    private function transactionAlreadyBeenDone(Transaction $transaction): bool
+    {
+        if ($this->transactionRepository->transactionAlreadyBeenDone($transaction)) {
+            throw new TransactionAlreadyBeenDoneException($transaction);
+        }
+
+        return true;
     }
 
     private function walletExists(Transaction $transaction): bool
@@ -109,12 +128,4 @@ class TransactionService implements TransactionServiceInterface
         );
     }
 
-    private function transactionAlreadyBeenDone(Transaction $transaction): bool
-    {
-        if ($this->transactionRepository->transactionAlreadyBeenDone($transaction)) {
-            throw new TransactionAlreadyBeenDoneException($transaction);
-        }
-
-        return true;
-    }
 }
