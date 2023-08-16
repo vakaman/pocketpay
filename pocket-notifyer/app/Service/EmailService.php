@@ -40,7 +40,7 @@ class EmailService
     private function getBody(EmailRequest $emailRequest): Body
     {
         return new Body(
-            body: $emailRequest->json('body.message'),
+            message: $emailRequest->json('body.message'),
             contentType: $emailRequest->json('body.content_type'),
         );
     }
