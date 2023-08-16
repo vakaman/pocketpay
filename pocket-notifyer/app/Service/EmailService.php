@@ -26,21 +26,22 @@ class EmailService
     private function getHeader(EmailRequest $emailRequest): Header
     {
         return new Header(
-            $emailRequest->json('headers.subject'),
-            $emailRequest->json('headers.date'),
-            $emailRequest->json('headers.from'),
-            $emailRequest->json('headers.sender'),
-            $emailRequest->json('headers.to'),
-            $emailRequest->json('headers.receiver'),
-            $emailRequest->json('headers.reply_to')
+            subject: $emailRequest->json('headers.subject'),
+            from: $emailRequest->json('headers.from'),
+            sender: $emailRequest->json('headers.sender'),
+            to: $emailRequest->json('headers.to'),
+            receiver: $emailRequest->json('headers.receiver'),
+            money: $emailRequest->json('headers.money'),
+            reply_to: $emailRequest->json('headers.reply_to'),
+            date: $emailRequest->json('headers.date'),
         );
     }
 
     private function getBody(EmailRequest $emailRequest): Body
     {
         return new Body(
-            $emailRequest->json('body.content_type'),
-            $emailRequest->json('body.message'),
+            body: $emailRequest->json('body.message'),
+            content_type: $emailRequest->json('body.content_type'),
         );
     }
 }
