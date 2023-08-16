@@ -8,6 +8,7 @@ use App\Domain\Entity\People\Person;
 use App\Domain\Entity\Pocket\Wallet;
 use App\Domain\Entity\Pocket\Wallets;
 use App\Domain\Enum\TransactionStatusEnum;
+use App\Domain\Exception\Transaction\PersonUnauthorizedToDoTransferException;
 use App\Domain\Exception\Transaction\TransactionAlreadyBeenDoneException;
 use App\Domain\Exception\Transaction\TransactionFailException;
 use App\Domain\Repository\PersonServiceInterface;
@@ -94,7 +95,7 @@ class TransactionService implements TransactionServiceInterface
     private function personCanTransferFunds(Transaction $transaction): bool
     {
         if (!$this->authorizationService->personCanTransferFunds($transaction)) {
-            throw new TransactionAlreadyBeenDoneException($transaction);
+            throw new PersonUnauthorizedToDoTransferException($transaction);
         }
 
         return true;
