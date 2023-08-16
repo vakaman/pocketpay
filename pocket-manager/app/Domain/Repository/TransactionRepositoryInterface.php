@@ -16,4 +16,8 @@ interface TransactionRepositoryInterface
     public function history(Uuid $wallet): TransactionHistory;
 
     public function transact(Transaction $wallet): bool;
+
+    public function regiterTransactHistory(Transaction $transaction): Transaction;
+
+    public function transactionAlreadyBeenDone(Transaction $transaction): bool;
 }

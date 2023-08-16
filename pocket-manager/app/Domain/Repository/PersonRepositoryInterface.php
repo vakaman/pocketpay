@@ -11,4 +11,10 @@ use App\Domain\Entity\People\Person;
 interface PersonRepositoryInterface
 {
     public function getWallet(Person $person, Wallet $wallet): Wallet;
+
+    public function create(Person $person): Person;
+
+    public function wallets(Person $person): array;
+
+    public function exists(Person $person): bool;
 }
