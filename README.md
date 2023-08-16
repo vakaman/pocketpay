@@ -73,3 +73,15 @@ https://pocketpay.com.br
 ## Database diagram
 
 <img src="doc/database.svg">
+
+
+## Sequence Diagrams
+
+### Transaction sequence
+
+<img src="doc/pocket-manager-transaction-sequence.svg">
+
+### Notification Sequence
+
+<img src="doc/pocket-notifyer-sequence-diagram.svg">
+
