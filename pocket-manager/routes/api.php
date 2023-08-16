@@ -34,7 +34,7 @@ Route::get("/person/{person}", function () {
     // return response()->noContent(StatusCode::NOT_FOUND->value);
 });
 
-Route::get("/can-do-transfer/{person}/", function () {
+Route::post("/can-do-transfer", function () {
     return response()->noContent(StatusCode::ACCEPTED->value);
     // return response()->noContent(StatusCode::FORBIDDEN);
 });
