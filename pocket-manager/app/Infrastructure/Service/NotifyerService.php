@@ -8,7 +8,6 @@ use App\Domain\Entity\Financial\Transaction;
 use App\Domain\Entity\People\Person;
 use App\Domain\Repository\PersonServiceInterface;
 use App\Infrastructure\Http\Entity\Notification\Package;
-
 use App\Jobs\NotifyTransfer;
 use App\Service\Interfaces\NotifyerServiceInterface;
 use Illuminate\Http\Client\HttpClientException;
