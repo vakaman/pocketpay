@@ -13,25 +13,27 @@ class EmailTest extends TestCase
     public function test_can_create_a_valid_email_header(): void
     {
         $mailHeader = new Header(
-            'My subject',
-            '2023-08-10 12:25:00',
-            'from@email.com.br',
-            'My sender Name',
-            'to@email.com.br',
-            'Receiver Name',
-            'from@email.com.br'
+            subject: 'My subject',
+            from: 'from@email.com.br',
+            sender: 'My sender Name',
+            to: 'to@email.com.br',
+            receiver: 'Receiver Name',
+            money: 100,
+            reply_to: 'from@email.com.br',
+            date: '2023-08-10 12:25:00',
         );
 
         $mailArray = (array) $mailHeader;
 
         $this->assertEquals([
             'subject' => 'My subject',
-            'date' => '2023-08-10 12:25:00',
             'from' => 'from@email.com.br',
             'sender' => 'My sender Name',
             'to' => 'to@email.com.br',
             'receiver' => 'Receiver Name',
-            'reply_to' => 'from@email.com.br'
+            'money' => 100,
+            'reply_to' => 'from@email.com.br',
+            'date' => '2023-08-10 12:25:00',
         ], $mailArray);
     }
 
@@ -53,13 +55,14 @@ class EmailTest extends TestCase
     public function test_can_create_a_valid_email_envelope(): void
     {
         $mailHeader = new Header(
-            'My subject',
-            '2023-08-10 12:25:00',
-            'from@email.com.br',
-            'My sender Name',
-            'to@email.com.br',
-            'Receiver Name',
-            'from@email.com.br'
+            subject: 'My subject',
+            from: 'from@email.com.br',
+            sender: 'My sender Name',
+            to: 'to@email.com.br',
+            receiver: 'Receiver Name',
+            money: 100,
+            reply_to: 'from@email.com.br',
+            date: '2023-08-10 12:25:00',
         );
 
         $mailBody = new Body(
@@ -74,12 +77,13 @@ class EmailTest extends TestCase
 
         $this->assertEquals([
             'subject' => 'My subject',
-            'date' => '2023-08-10 12:25:00',
             'from' => 'from@email.com.br',
             'sender' => 'My sender Name',
             'to' => 'to@email.com.br',
             'receiver' => 'Receiver Name',
-            'reply_to' => 'from@email.com.br'
+            'money' => 100,
+            'reply_to' => 'from@email.com.br',
+            'date' => '2023-08-10 12:25:00',
         ], $headerArray);
 
         $this->assertEquals([
