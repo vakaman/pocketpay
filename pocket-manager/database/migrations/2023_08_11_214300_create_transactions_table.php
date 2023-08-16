@@ -11,10 +11,12 @@ return new class extends Migration
         if (!Schema::hasTable('transactions')) {
             Schema::create('transactions', function (Blueprint $table) {
                 $table->uuid('id')->unique()->primary();
+                $table->foreignId('status_id')->constrained('statuses', 'id', 'status_id');
                 $table->foreignUuid('from')->constrained('wallets', 'id');
                 $table->foreignUuid('to')->constrained('wallets', 'id');
                 $table->bigInteger('value')->unsigned()->nullable(false);
                 $table->timestamps();
+
             });
         }
     }
