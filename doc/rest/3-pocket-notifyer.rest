@@ -10,6 +10,7 @@ Content-Type: application/json
         "sender": "Sender Name",
         "to": "to@email.com.br",
         "receiver": "Receiver Name",
+        "value": 100,
         "reply_to": "from@email.com.br"
     },
     "body": {
