@@ -22,6 +22,7 @@ class EmailTest extends TestCase
                 "sender": "Sender Name",
                 "to": "to@email.com.br",
                 "receiver": "Receiver Name",
+                "money": 100,
                 "reply_to": "from@email.com.br"
             },
             "body": {
@@ -47,6 +48,7 @@ class EmailTest extends TestCase
                 "sender": "Sender Name",
                 "to": "to@email.com.br",
                 "receiver": "Receiver Name",
+                "money": 100,
                 "reply_to": "from@email.com.br"
             },
             "body": {
