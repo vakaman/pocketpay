@@ -3,16 +3,24 @@
 namespace App\Infrastructure\Service;
 
 use App\Domain\Entity\Financial\Transaction;
+use App\Domain\Entity\People\Person;
+use App\Domain\Entity\Pocket\Wallet;
 use App\Domain\Exception\Transaction\TransactionUnauthorized;
+use App\Service\Interfaces\WalletServiceInterface;
 use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\Response;
 
 class TransactionAuthorizationService
 {
+    public function __construct(
+        private WalletServiceInterface $walletServiceInterface
+    ) {
+    }
+
     public function canTransact(Transaction $transaction): bool
     {
-        $request = $this->makeRequest($transaction);
+        $request = $this->canTransactRequest($transaction);
 
         if (!$request->ok()) {
             throw new TransactionUnauthorized($transaction);
@@ -21,13 +29,42 @@ class TransactionAuthorizationService
         return true;
     }
 
-    private function makeRequest(Transaction $transaction): Response
+    public function personCanTransferFunds(Transaction $transaction)
+    {
+        $person = $this->walletServiceInterface->getPerson(
+            new Wallet($transaction->from)
+        );
+
+        $request = $this->canTransferFundsRequest($person);
+
+        if (!$request->accepted()) {
+            throw new TransactionUnauthorized($transaction);
+        }
+
+        return true;
+    }
+
+    private function canTransactRequest(Transaction $transaction): Response
     {
         try {
             return Http::post(
                 env('TRANSACTION_AUTHORIZER_HOST') . '/api/can-transact',
                 [
                     'transaction' => $transaction->fromEntity($transaction)
+                ]
+            );
+        } catch (HttpClientException $e) {
+            throw $e;
+        }
+    }
+
+    private function canTransferFundsRequest(Person $person): Response
+    {
+        try {
+            return Http::post(
+                env('API_POCKETPAY') . '/api/can-do-transfer',
+                [
+                    'person' => $person->id->value
                 ]
             );
         } catch (HttpClientException $e) {
