@@ -21,6 +21,7 @@
     <ul>
         <li><strong>From Account:</strong> {{ $header->sender }}</li>
         <li><strong>To Account:</strong> {{ $header->receiver }}</li>
+        <li><strong>Value:</strong> {{ $header->money }}</li>
     </ul>
 
     <p>If you have any questions or concerns regarding this transfer, please don't hesitate to contact our support team.
