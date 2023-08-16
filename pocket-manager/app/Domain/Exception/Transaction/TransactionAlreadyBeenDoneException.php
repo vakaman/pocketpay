@@ -19,7 +19,7 @@ class TransactionAlreadyBeenDoneException extends \Exception
 
     public static function setMessage(string $message): string
     {
-        return self::$newMessage = $message;
+        return !empty($message) ? $message : self::$newMessage;
     }
 
     public function getTransaction(): Transaction

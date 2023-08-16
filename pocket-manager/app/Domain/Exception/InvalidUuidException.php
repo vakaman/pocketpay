@@ -13,6 +13,6 @@ class InvalidUuidException extends \Exception
 
     public static function setMessage(string $message): string
     {
-        return self::$newMessage = $message;
+        return !empty($message) ? $message : self::$newMessage;
     }
 }
