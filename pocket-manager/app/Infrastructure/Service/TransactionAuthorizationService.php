@@ -5,7 +5,7 @@ namespace App\Infrastructure\Service;
 use App\Domain\Entity\Financial\Transaction;
 use App\Domain\Entity\People\Person;
 use App\Domain\Entity\Pocket\Wallet;
-use App\Domain\Exception\Transaction\TransactionUnauthorized;
+use App\Domain\Exception\Transaction\TransactionUnauthorizedException;
 use App\Service\Interfaces\TransactionAuthorizationServiceInterface;
 use App\Service\Interfaces\WalletServiceInterface;
 use Illuminate\Http\Client\HttpClientException;
@@ -24,7 +24,7 @@ class TransactionAuthorizationService implements TransactionAuthorizationService
         $request = $this->canTransactRequest($transaction);
 
         if (!$request->ok()) {
-            throw new TransactionUnauthorized($transaction);
+            throw new TransactionUnauthorizedException($transaction);
         }
 
         return true;
@@ -39,7 +39,7 @@ class TransactionAuthorizationService implements TransactionAuthorizationService
         $request = $this->canTransferFundsRequest($person);
 
         if (!$request->accepted()) {
-            throw new TransactionUnauthorized($transaction);
+            throw new TransactionUnauthorizedException($transaction);
         }
 
         return true;
