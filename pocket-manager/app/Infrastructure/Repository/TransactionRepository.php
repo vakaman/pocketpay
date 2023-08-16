@@ -6,6 +6,7 @@ use App\Domain\Entity\Financial\Transaction;
 use App\Domain\Entity\Financial\TransactionHistory;
 use App\Domain\Entity\Financial\Transactions;
 use App\Domain\Entity\Pocket\Wallet;
+use App\Domain\Enum\TransactionStatusEnum;
 use App\Domain\Repository\TransactionRepositoryInterface;
 use App\Domain\Repository\WalletRepositoryInterface;
 use App\Domain\ValueObject\Uuid;
@@ -52,5 +53,31 @@ class TransactionRepository implements TransactionRepositoryInterface
             return true;
         }
         return false;
+    }
+
+    public function regiterTransactHistory(Transaction $transaction): Transaction
+    {
+        $transaction = ModelsTransaction::firstOrCreate(
+            [
+                'id' => $transaction->id->value
+            ],
+            [
+                'status_id' => $transaction->status,
+                'from' => $transaction->from->value,
+                'to' => $transaction->to->value,
+                'value' => $transaction->value->toInt(),
+                'created_at' => $transaction->created_at,
+                'updated_at' => $transaction->updated_at
+            ]
+        );
+
+        return Transaction::toEntity($transaction->toArray());
+    }
+
+    public function transactionAlreadyBeenDone(Transaction $transaction): bool
+    {
+        return ModelsTransaction::id($transaction->id)
+            ->alreadyBeenDone(TransactionStatusEnum::alreadyBeenDone())
+            ->exists();
     }
 }
