@@ -75,6 +75,7 @@ services:
             - pocketpay-notifyer-queue
             - pocketpay-manager-database
                 - condition=service_healthy
+        command: php artisan queue:work
 
     pocketpay-notifyer-mailhog:
         image: mailhog/mailhog
