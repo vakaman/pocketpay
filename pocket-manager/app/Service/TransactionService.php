@@ -7,6 +7,7 @@ use App\Domain\Entity\Financial\TransactionHistory;
 use App\Domain\Entity\People\Person;
 use App\Domain\Entity\Pocket\Wallet;
 use App\Domain\Entity\Pocket\Wallets;
+use App\Domain\Enum\TransactionStatusEnum;
 use App\Domain\Exception\Transaction\TransactionAlreadyBeenDoneException;
 use App\Domain\Exception\Transaction\TransactionFailException;
 use App\Domain\Repository\PersonServiceInterface;
@@ -59,6 +60,11 @@ class TransactionService implements TransactionServiceInterface
         $this->commitTransaction($transaction);
     }
 
+    public function changeStatus(Transaction $transaction, TransactionStatusEnum $status): bool
+    {
+        return $this->transactionRepository->changeStatus($transaction, $status);
+    }
+
     private function commitTransaction(Transaction $transaction): void
     {
         $this->canTransact($transaction);
@@ -66,6 +72,7 @@ class TransactionService implements TransactionServiceInterface
         throw_unless_transaction(
             fn () =>
             $this->transactionRepository->transact($transaction) &&
+                $transaction->setStatus(TransactionStatusEnum::SUCCESS) &&
                 $this->transactionRepository->regiterTransactHistory($transaction) &&
                 $this->notifyerService->send(
                     $this->notifyerService->notificationPackage($transaction)

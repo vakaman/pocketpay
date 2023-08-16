@@ -4,6 +4,7 @@ namespace App\Domain\Repository;
 
 use App\Domain\Entity\Financial\Transaction;
 use App\Domain\Entity\Financial\TransactionHistory;
+use App\Domain\Enum\TransactionStatusEnum;
 use App\Domain\ValueObject\Uuid;
 
 /**
@@ -20,4 +21,6 @@ interface TransactionRepositoryInterface
     public function regiterTransactHistory(Transaction $transaction): Transaction;
 
     public function transactionAlreadyBeenDone(Transaction $transaction): bool;
+
+    public function changeStatus(Transaction $transaction, TransactionStatusEnum $status): bool;
 }

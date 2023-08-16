@@ -80,4 +80,12 @@ class TransactionRepository implements TransactionRepositoryInterface
             ->alreadyBeenDone(TransactionStatusEnum::alreadyBeenDone())
             ->exists();
     }
+
+    public function changeStatus(Transaction $transaction, TransactionStatusEnum $status): bool
+    {
+        return ModelsTransaction::id($transaction->id)
+            ->update([
+                'status_id' => $status->value
+            ]);
+    }
 }
