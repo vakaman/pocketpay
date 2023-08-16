@@ -39,12 +39,6 @@ class Transaction extends Model
     public function statuses(): HasOne
     {
         return $this->hasOne(Statuses::class, 'id', 'status_id');
-        // return $this->belongsToMany(
-        //     Statuses::class,
-        //     'statuses',
-        //     'id',
-        //     'id'
-        //     )->using(TransactionStatus::class);
     }
 
     public function scopeId(Builder $query, Uuid $id): void
