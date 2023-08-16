@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Domain\Entity\Financial\Transaction;
-use App\Service\TransactionService;
+use App\Service\Interfaces\TransactionServiceInterface;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -14,20 +14,17 @@ class TransferFunds implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $tries = 5;
-
     public $maxExceptions = 5;
 
     public $timeout = 60;
 
     public function __construct(
-        private Transaction $transaction,
-        private TransactionService $transactionService
+        private Transaction $transaction
     ) {
     }
 
-    public function handle(): void
+    public function handle(TransactionServiceInterface $transactionService): void
     {
-        $this->transactionService->transact($this->transaction);
+        $transactionService->transact($this->transaction);
     }
 }
