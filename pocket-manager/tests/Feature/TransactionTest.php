@@ -97,12 +97,12 @@ class TransactionTest extends TestCase
             ->once()
             ->andReturn(true, true);
 
-        $response = $this
-            ->get('/api/transaction/history/5cb0b7ec-07a2-4185-a8ca-ff9160ec4d2c/fbcd05e1-9530-44e2-b0a2-de551b260c18');
-
         $this->mock(PersonServiceInterface::class)
             ->shouldReceive('needExists')
             ->andReturnTrue();
+
+        $response = $this
+            ->get('/api/transaction/history/5cb0b7ec-07a2-4185-a8ca-ff9160ec4d2c/fbcd05e1-9530-44e2-b0a2-de551b260c18');
 
         $expectedHistory = [
             [
