@@ -26,6 +26,10 @@ set -a
 . ./.env
 set +a
 
+show "Create external networks..." "warning"
+docker network create pocketpay-manager-external || true
+docker network create pocketpay-notifyer-external || true
+docker network create pocketpay-external || true
 
 show "Pull docker images..." "warning"
 docker-compose \
