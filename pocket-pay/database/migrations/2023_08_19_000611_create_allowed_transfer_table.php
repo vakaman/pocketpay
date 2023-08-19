@@ -6,20 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('allowed_transfer', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->foreignId('from')->constrained('economic_activities', 'id');
+            $table->foreignId('to')->constrained('economic_activities', 'id');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('allowed_transfer');
