@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('people', function (Blueprint $table) {
             $table->uuid('id')->primary()->unique();
             $table->foreignId('type_id')->constrained('types', 'id', 'types_id');
+            $table->foreignId('economic_activities_id')->constrained('economic_activities', 'id', 'economic_activities_id');
         });
     }
 

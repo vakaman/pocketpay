@@ -10,7 +10,6 @@ return new class extends Migration
     {
         Schema::create('economic_activities', function (Blueprint $table) {
             $table->id()->index('economic_activities_id');
-            $table->foreignUuid('person_id')->references('id')->on('people');
             $table->char('name')->index('economic_activities_name')->unique('economic_activities_name');
             $table->char('code')->index('economic_activities_code')->unique('economic_activities_code');
         });
