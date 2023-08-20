@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('person_natural', function (Blueprint $table) {
             $table->foreignUuid('person_id')->references('id')->on('people');
+            $table->char('name');
             $table->char('document')->index('person_natural_document')->unique('person_natural_document');
             $table->char('email')->index('person_natural_email')->unique('person_natural_email');
         });
