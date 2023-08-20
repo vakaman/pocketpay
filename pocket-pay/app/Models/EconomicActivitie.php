@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Type extends Model
+class EconomicActivitie extends Model
 {
     use HasFactory;
 
@@ -14,5 +14,7 @@ class Type extends Model
     protected $fillabble = [
         'id',
         'name',
+        'code',
+        'type_id'
     ];
 }

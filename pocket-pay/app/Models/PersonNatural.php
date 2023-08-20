@@ -5,14 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Type extends Model
+class PersonNatural extends Model
 {
     use HasFactory;
+
+    protected $table = 'person_natural';
 
     public $timestamps = false;
 
     protected $fillabble = [
-        'id',
         'name',
+        'document',
+        'email'
     ];
 }
