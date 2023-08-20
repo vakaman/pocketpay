@@ -1,10 +1,13 @@
 <div>
-    <select id="{{ $id }}" name="{{ $id }}"
+    <select id="personType" name="personType" wire:model="selectedPersonType"
         class="mt-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-        @foreach ($values as $value)
-            <option value="{{ $value->id }}" @selected(old('value') == $value->id)>
-                {{ $value->name }}
+        @foreach ($types as $type)
+            <option value="{{ $type->id }}" @selected(old('type') == $type->id)>
+                {{ $type->name }}
             </option>
         @endforeach
     </select>
+
+    @livewire('input-select-economic-activities', ['selectedPersonType' => $selectedPersonType])
+
 </div>

@@ -3,10 +3,9 @@
         @csrf
 
         <!-- Type -->
-        <div >
+        <div class="mt-4">
             <x-input-label for="type" :value="__('Type')" />
-            <x-input-select :types="$types" id="type" class="block mt-1 w-full" name="type" :value="old('type')"
-                required autofocus />
+            <livewire:input-select-person-types class="block mt-1 w-full" required autofocus />
             <x-input-error :messages="$errors->get('type')" class="mt-2" />
         </div>
 
@@ -64,5 +63,6 @@
                 {{ __('Register') }}
             </x-primary-button>
         </div>
+
     </form>
 </x-guest-layout>
