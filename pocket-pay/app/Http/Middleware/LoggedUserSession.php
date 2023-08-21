@@ -20,8 +20,6 @@ class LoggedUserSession
                     'teste' => '123'
                 ]
             ]);
-
-            dd(auth());
         }
 
         return $next($request);
