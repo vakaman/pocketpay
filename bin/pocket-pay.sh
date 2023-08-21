@@ -63,3 +63,9 @@ if ! docker-compose -f "$dockercompose" exec "$containerapi" npm install; then
     show "ERROR: An error occurred while updaTe NPM packages"
     exit 1
 fi
+
+show "Build NPM dependencies..."
+if ! docker-compose -f "$dockercompose" exec "$containerapi" npm run build; then
+    show "ERROR: An error occurred while build NPM packages"
+    exit 1
+fi
