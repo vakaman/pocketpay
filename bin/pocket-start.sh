@@ -20,6 +20,12 @@ show()
 
 APP_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 || exit ; pwd -P )" && cd "$APP_PATH"/../ || exit
 
+show "Create required .env..." "warning"
+cp .env-example .env
+cp pocket-pay/.env-example pocket-pay/.env
+cp pocket-notifyer/.env-example pocket-notifyer/.env
+cp pocket-manager/.env-example pocket-manager/.env
+
 show "Loading .env..." "warning"
 
 set -a
