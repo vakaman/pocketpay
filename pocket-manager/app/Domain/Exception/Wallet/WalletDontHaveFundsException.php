@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Exception;
+namespace App\Domain\Exception\Wallet;
 
 use App\Domain\ValueObject\Uuid;
 
