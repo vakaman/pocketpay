@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('types', function (Blueprint $table) {
             $table->id()->index('types_id');
-            $table->char('name')->index('types_name')->unique('types_name');
+            $table->string('name')->index('types_name')->unique('types_name');
         });
     }
 
