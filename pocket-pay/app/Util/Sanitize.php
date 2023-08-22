@@ -16,14 +16,4 @@ class Sanitize
     {
         return filter_var($value, FILTER_SANITIZE_EMAIL);
     }
-
-    public static function cnpj(string $cnpj): string
-    {
-        $cnpj = Validator::make($cnpj, [
-            Rule::REQUIRED,
-            Rule::CNPJ,
-        ], ['cnpj' => 'invalid CNPJ valid']);
-
-        return $cnpj->valid()['cnpj'];
-    }
 }
