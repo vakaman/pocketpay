@@ -11,24 +11,24 @@ use App\Infrastructure\Http\Entity\StatusCode;
 use App\Infrastructure\Http\Entity\Wallet\CreateWalletRequest;
 use App\Infrastructure\Mapper\Api\Pocket\Wallet as PocketWallet;
 use App\Infrastructure\Mapper\Api\Pocket\Wallets;
-use App\Service\WalletService;
+use App\Service\Interfaces\WalletServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
 class WalletController extends Controller
 {
     public function __construct(
-        private WalletService $walletService
+        private WalletServiceInterface $walletService
     ) {
     }
 
-    public function create(CreateWalletRequest $createWalletRequest): Response
+    public function create(CreateWalletRequest $createWalletRequest): JsonResponse
     {
-        $this->walletService->create(
+        $wallet = new PocketWallet($this->walletService->create(
             new Person(id: new Uuid($createWalletRequest->get('person')))
-        );
+        ));
 
-        return response()->noContent(StatusCode::CREATED->value);
+        return response()->json($wallet->toArray(), StatusCode::CREATED->value);
     }
 
     public function all(string $person): JsonResponse
@@ -39,7 +39,7 @@ class WalletController extends Controller
             )
         );
 
-        return response()->json($allWallets->request());
+        return response()->json($allWallets->toArray());
     }
 
     public function main(string $person): JsonResponse
@@ -48,7 +48,7 @@ class WalletController extends Controller
             new Person(id: new Uuid($person))
         ));
 
-        return response()->json($wallet->request());
+        return response()->json($wallet->toArray());
     }
 
     public function setMain($wallet): Response

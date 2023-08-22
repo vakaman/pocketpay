@@ -9,7 +9,7 @@ class Balance
     ) {
     }
 
-    public function response(): array
+    public function toArray(): array
     {
         return [
             'balance' => $this->balance

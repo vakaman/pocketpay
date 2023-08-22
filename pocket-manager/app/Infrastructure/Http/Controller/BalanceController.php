@@ -26,6 +26,6 @@ class BalanceController extends Controller
             )
         );
 
-        return response()->json($balance->response());
+        return response()->json($balance->toArray());
     }
 }

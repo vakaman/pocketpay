@@ -12,7 +12,7 @@ class TransactionHistory
     ) {
     }
 
-    public function response(): array
+    public function toArray(): array
     {
         return array_map(function ($transaction) {
 

@@ -11,7 +11,7 @@ class Wallet
     ) {
     }
 
-    public function request(): array
+    public function toArray(): array
     {
         return [
             'id' => $this->wallet->id->value,

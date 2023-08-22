@@ -11,7 +11,7 @@ class Transaction
     ) {
     }
 
-    public function response(): array
+    public function toArray(): array
     {
         return [
             'transaction' => [

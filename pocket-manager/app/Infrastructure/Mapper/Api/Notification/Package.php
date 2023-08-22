@@ -13,7 +13,7 @@ class Package
     ) {
     }
 
-    public function request(): array
+    public function toArray(): array
     {
         return [
             'headers' => $this->headers->toArray(),

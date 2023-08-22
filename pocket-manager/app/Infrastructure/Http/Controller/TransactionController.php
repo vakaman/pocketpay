@@ -26,7 +26,7 @@ class TransactionController extends Controller
     {
         $transaction = new Transaction($this->transactionService->detail($id));
 
-        return response()->json($transaction->response());
+        return response()->json($transaction->toArray());
     }
 
     public function history(string $person, string $wallet): JsonResponse
@@ -38,7 +38,7 @@ class TransactionController extends Controller
             )
         );
 
-        return response()->json($transaction->response());
+        return response()->json($transaction->toArray());
     }
 
     public function transaction(TransactionRequest $transactionRequest): Response
