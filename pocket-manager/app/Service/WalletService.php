@@ -6,9 +6,9 @@ use App\Domain\Entity\Currency\Money;
 use App\Domain\Entity\People\Person;
 use App\Domain\Entity\Pocket\Wallet;
 use App\Domain\Entity\Pocket\Wallets;
-use App\Domain\Exception\WalletDontHaveFundsException;
-use App\Domain\Exception\WalletNotBelongsToPersonException;
-use App\Domain\Exception\WalletNotExistsException;
+use App\Domain\Exception\Wallet\WalletDontHaveFundsException;
+use App\Domain\Exception\Wallet\WalletNotBelongsToPersonException;
+use App\Domain\Exception\Wallet\WalletNotExistsException;
 use App\Domain\Repository\PersonRepositoryInterface;
 use App\Domain\Repository\WalletRepositoryInterface;
 use App\Domain\ValueObject\Uuid;
@@ -29,10 +29,12 @@ class WalletService implements WalletServiceInterface
 
     public function main(Person $person): Wallet
     {
+        $this->personRepository->needExists($person);
+
         return $this->walletRepository->main($person);
     }
 
-    public function create(Person $person): bool
+    public function create(Person $person): Wallet
     {
         $this->personRepository->create($person);
 
