@@ -7,7 +7,7 @@ use App\Domain\Entity\Currency\Money;
 use App\Domain\Entity\Financial\TransactionHistory;
 use App\Domain\Entity\Financial\Transactions;
 use App\Domain\Exception\Transaction\TransactionUnauthorizedException;
-use App\Domain\Exception\WalletDontHaveFundsException;
+use App\Domain\Exception\Wallet\WalletDontHaveFundsException;
 use App\Domain\Repository\PersonServiceInterface;
 use App\Domain\Repository\TransactionRepositoryInterface;
 use App\Domain\Repository\WalletRepositoryInterface;
