@@ -6,6 +6,7 @@ use App\Domain\Entity\Currency\Money;
 use App\Domain\Entity\People\Person;
 use App\Domain\Entity\Pocket\Wallet as PocketWallet;
 use App\Domain\Entity\Pocket\Wallets;
+use App\Domain\Exception\Wallet\WalletCannotBeCreatedException;
 use App\Domain\Repository\PersonRepositoryInterface;
 use App\Domain\Repository\WalletRepositoryInterface;
 use App\Domain\ValueObject\Uuid;
@@ -46,7 +47,7 @@ class WalletRepository implements WalletRepositoryInterface
         return false;
     }
 
-    public function create(Person $person, bool $main): bool
+    public function create(Person $person, bool $main): PocketWallet
     {
         $newPerson = ModelsPerson::find($person->id->value);
 
@@ -56,10 +57,10 @@ class WalletRepository implements WalletRepositoryInterface
             ->create();
 
         if ($createdWallet) {
-            return true;
+            return PocketWallet::toEntity($createdWallet->toArray());
         }
 
-        return false;
+        throw new WalletCannotBeCreatedException($person);
     }
 
     public function setMain(PocketWallet $wallet): bool
