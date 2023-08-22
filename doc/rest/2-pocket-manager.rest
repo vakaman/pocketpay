@@ -35,7 +35,6 @@ Content-Type: application/json
 GET {{ host_wallet_manager }}/api/wallet/all/person/{{ wallet_manager_person_id }}
 Content-Type: application/json
 
-
 ### Add funds to client wallet
 PATCH {{ host_wallet_manager }}/api/wallet/b36a61a4-6c04-477f-8e15-35ba26d293a0/250
 Content-Type: application/json
