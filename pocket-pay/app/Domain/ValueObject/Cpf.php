@@ -2,15 +2,13 @@
 
 namespace App\Domain\ValueObject;
 
-use App\Util\Sanitize;
-
 class Cpf
 {
     public readonly string $value;
 
     public function __construct(string $cpf)
     {
-        $this->value = $this->sanitize($cpf);
+        $this->value = $this->setCpf($cpf);
     }
 
     public function __toString(): string
@@ -18,8 +16,17 @@ class Cpf
         return $this->value;
     }
 
-    private function sanitize(string $cpf): string
+    private function setCpf(string $cpf): string
     {
-        return Sanitize::cpf($cpf);
+        $this->validate($cpf);
+
+        return trim(preg_replace('/[^0-9]/', '', $cpf));
+    }
+
+    private function validate(string $cpf): void
+    {
+        if (!validateCpf($cpf)) {
+            throw new \Exception('The CPF value is invalid');
+        };
     }
 }

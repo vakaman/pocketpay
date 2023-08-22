@@ -2,15 +2,13 @@
 
 namespace App\Domain\ValueObject;
 
-use App\Util\Sanitize;
-
 class Cnpj
 {
     public readonly string $value;
 
     public function __construct(string $cnpj)
     {
-        $this->value = $this->sanitize($cnpj);
+        $this->value = $this->setCnpj($cnpj);
     }
 
     public function __toString(): string
@@ -18,8 +16,17 @@ class Cnpj
         return $this->value;
     }
 
-    private function sanitize(string $cnpj): string
+    private function setCnpj(string $cnpj): string
     {
-        return Sanitize::cnpj($cnpj);
+        $this->validate($cnpj);
+
+        return trim(preg_replace('/[^0-9]/', '', $cnpj));
+    }
+
+    private function validate(string $cnpj): void
+    {
+        if (!validateCpf($cnpj)) {
+            throw new \Exception('The CPF value is invalid');
+        };
     }
 }

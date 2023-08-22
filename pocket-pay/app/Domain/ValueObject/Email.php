@@ -2,15 +2,20 @@
 
 namespace App\Domain\ValueObject;
 
-use App\Util\Sanitize;
-
 class Email
 {
     public readonly string $value;
 
     public function __construct(string $email)
     {
-        $this->value = $this->sanitize($email);
+        $this->value = $this->setEmail($email);
+    }
+
+    private function setEmail(string $email): string
+    {
+        $validEmail = $this->validateEmail($email);
+
+        return trim($validEmail);
     }
 
     public function __toString(): string
@@ -18,8 +23,12 @@ class Email
         return $this->value;
     }
 
-    private function sanitize(string $email): string
+    private function validateEmail(string $email): string
     {
-        return Sanitize::email($email);
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new \Exception('The email provided is invalid');
+        };
+
+        return $email;
     }
 }
