@@ -8,9 +8,9 @@ class EconomicActivities
 {
     public function __construct(
         public readonly int $id,
-        public readonly string $name,
-        public readonly Code $code,
-        public readonly Type $type
+        public readonly Type $type,
+        public readonly string|null $name,
+        public readonly Code|null $code
     ) {
     }
 }
