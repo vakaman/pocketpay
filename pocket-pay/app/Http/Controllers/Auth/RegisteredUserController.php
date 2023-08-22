@@ -2,6 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Domain\Enum\PersonTypeEnum;
+use App\Domain\ValueObject\Cnpj;
+use App\Domain\ValueObject\Cpf;
+use App\Domain\ValueObject\Email;
+use App\Domain\ValueObject\Name;
+use App\Domain\ValueObject\Uuid as ValueObjectUuid;
 use App\Http\Controllers\Controller;
 use App\Models\Person;
 use App\Models\PersonLegal;
@@ -36,6 +42,8 @@ class RegisteredUserController extends Controller
         $this->createPerson($request, $personUuid);
 
         $this->attachUserToPerson($user, $personUuid);
+
+        $this->createPersonByType($request, $personUuid);
 
         event(new Registered($user));
 
@@ -73,37 +81,86 @@ class RegisteredUserController extends Controller
     private function createUser($request)
     {
         return User::firstOrCreate(
-            ['email' => $request->email,],
             [
-                'name' => $request->name,
-                'email' => $request->email,
+                'email' => (new Email($request->get('email')))->value,
+            ],
+            [
+                'name' => (new Name($request->get('name')))->value,
+                'email' => (new Email($request->get('email')))->value,
                 'password' => Hash::make($request->password),
             ]
         );
     }
 
-    private function createPerson($request, $personUuid): Person
+    private function createPerson($request, $uuid): Person
     {
         return Person::firstOrCreate(
-            ['id' => $personUuid],
             [
-                'id' => $personUuid,
+                'id' => (new ValueObjectUuid($uuid))->value
+            ],
+            [
+                'id' => (new ValueObjectUuid($uuid))->value,
                 'type_id' => $request->get('personType'),
                 'economic_activities_id' => $request->get('economicActivities'),
             ],
         );
     }
 
-    private function attachUserToPerson($user, $personUuid)
+    private function attachUserToPerson($user, $uuid): void
     {
         UserPerson::firstOrCreate(
             [
                 'user_id' => $user->id,
-                'person_id' => $personUuid,
+                'person_id' => (new ValueObjectUuid($uuid))->value,
             ],
             [
                 'user_id' => $user->id,
-                'person_id' => $personUuid,
+                'person_id' => (new ValueObjectUuid($uuid))->value,
+            ]
+        );
+    }
+
+    private function createPersonByType(Request $request, string $uuid): void
+    {
+        if (PersonTypeEnum::from($request->get('personType'))->name === 'PF') {
+            $this->createPersonNatural($request, $uuid);
+        }
+
+        if (PersonTypeEnum::from($request->get('personType'))->name === 'PJ') {
+            $this->createPersonLegal($request, $uuid);
+        }
+    }
+
+    private function createPersonNatural(Request $request, string $uuid): void
+    {
+        PersonNatural::firstOrCreate(
+            [
+                'person_id' => (new ValueObjectUuid($uuid))->value,
+                'document' => (new Cpf($request->get('document')))->value,
+                'email' => (new Email($request->get('email')))->value,
+            ],
+            [
+                'person_id' => (new ValueObjectUuid($uuid))->value,
+                'name' => (new Name($request->get('name')))->value,
+                'document' => (new Cpf($request->get('document')))->value,
+                'email' => (new Email($request->get('email')))->value,
+            ]
+        );
+    }
+
+    private function createPersonLegal(string $uuid, Request $request): void
+    {
+        PersonLegal::firstOrCreate(
+            [
+                'person_id' => (new ValueObjectUuid($uuid))->value,
+                'document' => (new Cnpj($request->get('document')))->value,
+                'email' => (new Email($request->get('email')))->value,
+            ],
+            [
+                'person_id' => (new ValueObjectUuid($uuid))->value,
+                'name' => (new Name($request->get('name')))->value,
+                'document' => (new Cnpj($request->get('document')))->value,
+                'email' => (new Email($request->get('email')))->value,
             ]
         );
     }
