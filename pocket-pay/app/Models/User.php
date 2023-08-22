@@ -12,6 +12,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $primaryKey = 'id';
+
     protected $fillable = [
         'name',
         'email',
@@ -30,6 +32,9 @@ class User extends Authenticatable
 
     public function person(): BelongsToMany
     {
-        return $this->belongsToMany(Person::class)->using(UserPerson::class);
+        return $this->belongsToMany(
+            Person::class,
+            'users_person'
+        )->using(UserPerson::class);
     }
 }

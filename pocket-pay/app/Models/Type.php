@@ -11,7 +11,7 @@ class Type extends Model
 
     public $timestamps = false;
 
-    protected $fillabble = [
+    protected $fillable = [
         'id',
         'name',
     ];

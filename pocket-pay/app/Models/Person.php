@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Person extends Model
 {
@@ -13,6 +15,8 @@ class Person extends Model
     protected $table = 'people';
 
     protected $primaryKey = 'id';
+
+    protected $keyType = 'string';
 
     public $timestamps = false;
 
@@ -29,5 +33,15 @@ class Person extends Model
     public function user(): BelongsToMany
     {
         return $this->belongsToMany(User::class)->using(UserPerson::class);
+    }
+
+    public function natural(): HasOne
+    {
+        return $this->hasOne(PersonNatural::class);
+    }
+
+    public function legal(): BelongsTo
+    {
+        return $this->belongsTo(PersonLegal::class);
     }
 }
