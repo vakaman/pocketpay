@@ -1,5 +1,8 @@
 <?php
 
+use App\Validations\Rule;
+use Illuminate\Support\Facades\Validator;
+
 if (!function_exists('ddt')) {
     function ddt(mixed ...$vars): never
     {
@@ -35,7 +38,43 @@ if (!function_exists('throw_unless_transaction')) {
         mixed ...$parameters
     ): mixed {
         return throw_unless(
-            transaction($callback), $exception, $parameters
+            transaction($callback),
+            $exception,
+            $parameters
         );
+    }
+}
+
+if (!function_exists('validateCpf')) {
+    function validateCpf(string $cpf): bool
+    {
+        $cpf = Validator::make(
+            ['cpf' => $cpf],
+            [
+                'cpf' => [
+                    Rule::REQUIRED,
+                    Rule::CPF
+                ]
+            ]
+        );
+
+        return $cpf->passes();
+    }
+}
+
+if (!function_exists('validateCnpj')) {
+    function validateCnpj(string $cnpj)
+    {
+        $cnpj = Validator::make(
+            ['cnpj' => $cnpj],
+            [
+                'cnpj' => [
+                    Rule::REQUIRED,
+                    Rule::CNPJ
+                ]
+            ]
+        );
+
+        return $cnpj->passes();
     }
 }

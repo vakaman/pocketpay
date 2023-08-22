@@ -17,16 +17,6 @@ class Sanitize
         return filter_var($value, FILTER_SANITIZE_EMAIL);
     }
 
-    public static function cpf(string $cpf): bool
-    {
-        $cpf = Validator::make($cpf, [
-            Rule::REQUIRED,
-            Rule::CPF,
-        ], ['cpf' => 'invalid CPF valid']);
-
-        return $cpf->valid()['cpf'];
-    }
-
     public static function cnpj(string $cnpj): string
     {
         $cnpj = Validator::make($cnpj, [
