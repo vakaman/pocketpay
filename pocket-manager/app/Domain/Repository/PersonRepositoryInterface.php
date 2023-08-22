@@ -17,4 +17,6 @@ interface PersonRepositoryInterface
     public function wallets(Person $person): array;
 
     public function exists(Person $person): bool;
+
+    public function needExists(Person $person): Person;
 }
