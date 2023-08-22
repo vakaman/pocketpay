@@ -46,4 +46,11 @@ class PersonRepository implements PersonRepositoryInterface
     {
         return ModelsPerson::where('id', $person->id->value)->exists();
     }
+
+    public function needExists(Person $person): Person
+    {
+        return Person::toEntity(
+            ModelsPerson::findOrFail($person->id->value)->toArray()
+        );
+    }
 }
