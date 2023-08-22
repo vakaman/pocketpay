@@ -17,7 +17,7 @@ interface WalletRepositoryInterface
 
     public function main(Person $person): Wallet|bool;
 
-    public function create(Person $person, bool $main): bool;
+    public function create(Person $person, bool $main): Wallet;
 
     public function belongsToPerson(Uuid $wallet, Person $person): bool;
 
