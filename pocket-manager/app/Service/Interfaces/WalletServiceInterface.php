@@ -3,13 +3,11 @@
 namespace App\Service\Interfaces;
 
 use App\Domain\Entity\Currency\Money;
-use App\Domain\Entity\Financial\Transaction;
-use App\Domain\Entity\Financial\TransactionHistory;
 use App\Domain\Entity\People\Person;
 use App\Domain\Entity\Pocket\Wallet;
 use App\Domain\Entity\Pocket\Wallets;
-use App\Domain\Exception\WalletDontHaveFundsException;
-use App\Domain\Exception\WalletNotExistsException;
+use App\Domain\Exception\Wallet\WalletDontHaveFundsException;
+use App\Domain\Exception\Wallet\WalletNotExistsException;
 use App\Domain\ValueObject\Uuid;
 
 /**
@@ -21,7 +19,7 @@ interface WalletServiceInterface
 
     public function main(Person $person): Wallet;
 
-    public function create(Person $person): bool;
+    public function create(Person $person): Wallet;
 
     public function setMain(Wallet $wallet): bool;
 
@@ -34,4 +32,6 @@ interface WalletServiceInterface
     public function haveFunds(Uuid $wallet, Money $value): bool|WalletDontHaveFundsException;
 
     public function getPerson(Wallet $wallet): Person;
+
+    public function addFunds(Wallet $wallet, Money $money): int;
 }
