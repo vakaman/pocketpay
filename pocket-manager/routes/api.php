@@ -13,8 +13,9 @@ Route::get("/transaction/history/{person}/{wallet}", [TransactionController::cla
 Route::post("/transaction", [TransactionController::class, 'transaction']);
 
 Route::post("/wallet", [WalletController::class, 'create']);
-Route::get("/wallet/all/person/{person}", [WalletController::class, 'all']);
+Route::delete("/wallet/{wallet}", [WalletController::class, 'delete']);
 Route::get("/wallet/main/person/{person}", [WalletController::class, 'main']);
+Route::get("/wallet/all/person/{person}", [WalletController::class, 'all']);
 Route::patch("/wallet/main/{wallet}", [WalletController::class, 'setMain']);
 Route::patch("/wallet/funds/{wallet}/{money}", [WalletController::class, 'addFunds']);
 
