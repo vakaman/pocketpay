@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Exceptions\Pocket\WalletCannotBeCreatedException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -24,7 +25,10 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->reportable(function (Throwable $e) {
-            //
+        });
+
+        $this->renderable(function (WalletCannotBeCreatedException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
         });
     }
 }
