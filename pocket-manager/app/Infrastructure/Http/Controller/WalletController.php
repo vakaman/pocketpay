@@ -33,7 +33,7 @@ class WalletController extends Controller
 
     public function delete(string $id): Response
     {
-        $this->walletService->delete(new Wallet(id: $id));
+        $this->walletService->delete(new Wallet(id: new Uuid($id)));
 
         return response()->noContent(StatusCode::NO_CONTENT->value);
     }
