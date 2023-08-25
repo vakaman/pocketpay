@@ -24,6 +24,13 @@ if (!function_exists('isUuid')) {
     }
 }
 
+if (!function_exists('uuidGenerate')) {
+    function uuidGenerate(): string
+    {
+        return (Ramsey\Uuid\Uuid::uuid4())->toString();
+    }
+}
+
 if (!function_exists('transaction')) {
     function transaction(Closure $callback, int $attempts = 1): mixed
     {
