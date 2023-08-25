@@ -11,6 +11,7 @@ use App\Domain\Repository\PersonRepositoryInterface;
 use App\Domain\Repository\WalletRepositoryInterface;
 use App\Domain\ValueObject\Uuid;
 use App\Models\Person as ModelsPerson;
+use App\Models\PersonWallet;
 use App\Models\Wallet;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -65,6 +66,7 @@ class WalletRepository implements WalletRepositoryInterface
 
     public function delete(PocketWallet $wallet): void
     {
+        PersonWallet::where('wallet_id', $wallet->id->value)->delete();
         Wallet::findOrFail($wallet->id->value)->delete();
     }
 
@@ -106,6 +108,13 @@ class WalletRepository implements WalletRepositoryInterface
     {
         return Wallet::where('id', $wallet->value)
             ->where('money', '>=', $value->toInt())
+            ->exists();
+    }
+
+    public function isMain(PocketWallet $wallet): bool
+    {
+        return Wallet::where('id', $wallet->id->value)
+            ->where('main', true)
             ->exists();
     }
 
