@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class TransactionRequest extends FormRequest
 {
-    public function rule(): array
+    public function rules(): array
     {
         return [
             'from_wallet' => [

@@ -2,12 +2,12 @@
 
 namespace App\Infrastructure\Http\Entity\Wallet;
 
+use App\Infrastructure\Request\FormRequest;
 use App\Validations\Rule;
-use Illuminate\Foundation\Http\FormRequest;
 
 class CreateWalletRequest extends FormRequest
 {
-    public function rule(): array
+    public function rules(): array
     {
         return [
             'person' => [
