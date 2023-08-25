@@ -8,6 +8,9 @@ networks:
     pocketpay-external:
         name: pocketpay-external
         external: true
+    pocketpay-manager-external:
+        name: pocketpay-manager-external
+        external: true
 
 services:
 
@@ -45,6 +48,7 @@ services:
         networks:
             - pocketpay-internal
             - pocketpay-external
+            - pocketpay-manager-external
         restart: "on-failure"
         volumes:
             - ./pocket-pay:/app
