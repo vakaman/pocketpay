@@ -3,29 +3,32 @@
 namespace App\Domain\Entity\People;
 
 use App\Domain\ValueObject\Uuid;
-use Ramsey\Uuid\Uuid as UuidValidator;
 
-abstract class Person
+class Person
 {
-    public readonly Uuid|string $id;
-    public readonly Type $type;
-
-    public function __construct(
-        Uuid|string $id,
-        Type $type
-    ) {
-        $this->id = $this->setId($id);
-        $this->type = $type;
+    private static function personNatural($id, $type, ...$args): PersonAbstract
+    {
+        return new PersonNatural(
+            $id,
+            $type,
+            ...$args
+        );
     }
 
-    private function setId(Uuid|string $id): Uuid
+    private static function personLegal($id, $type, ...$args): PersonAbstract
     {
-        if ($id instanceof Uuid) {
-            return $id;
-        }
+        return new PersonLegal(
+            $id,
+            $type,
+            ...$args
+        );
+    }
 
-        if (UuidValidator::isValid($id)) {
-            return new Uuid($id);
-        }
+    public static function new(Uuid $id, Type $type, ...$args): PersonAbstract
+    {
+        return match ($type->name) {
+            'PF' => self::personNatural($id, $type, ...$args),
+            'PJ' => self::personLegal($id, $type, ...$args),
+        };
     }
 }

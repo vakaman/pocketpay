@@ -7,18 +7,18 @@ use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Name;
 use App\Domain\ValueObject\Uuid;
 
-class PersonNatural extends Person
+class PersonNatural extends PersonAbstract
 {
-    public readonly Name $name;
-    public readonly Cpf $document;
-    public readonly Email $email;
+    public readonly Name|null $name;
+    public readonly Cpf|null $document;
+    public readonly Email|null $email;
 
     public function __construct(
         Uuid|string $id,
         Type $type,
-        Name $name,
-        Cpf $document,
-        Email $email
+        Name|null  $name = null,
+        Cpf|null  $document = null,
+        Email|null  $email = null
     ) {
         parent::__construct(id: $id, type: $type);
         $this->name = $name;
@@ -26,7 +26,7 @@ class PersonNatural extends Person
         $this->email = $email;
     }
 
-    public static function toEntity(array $model): Person
+    public static function toEntity(array $model): PersonAbstract
     {
         return new self(
             id: new Uuid($model['id']),
