@@ -43,6 +43,16 @@ class WalletService implements WalletServiceInterface
 
     public function delete(Wallet $wallet): void
     {
+        $this->needExists($wallet);
+
+        if ($this->walletRepository->isMain($wallet)) {
+            throw new \Exception('Cannot delete main wallet');
+        }
+
+        if ($this->walletRepository->haveFunds($wallet->id, new Money(1))) {
+            throw new \Exception('Cannot delete a wallet with funds');
+        }
+
         $this->walletRepository->delete($wallet);
     }
 
