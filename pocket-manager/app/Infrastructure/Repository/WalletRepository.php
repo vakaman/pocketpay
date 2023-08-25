@@ -63,6 +63,11 @@ class WalletRepository implements WalletRepositoryInterface
         throw new WalletCannotBeCreatedException($person);
     }
 
+    public function delete(PocketWallet $wallet): void
+    {
+        Wallet::findOrFail($wallet->id->value)->delete();
+    }
+
     public function setMain(PocketWallet $wallet): bool
     {
         $wallet = Wallet::find($wallet->id->value);

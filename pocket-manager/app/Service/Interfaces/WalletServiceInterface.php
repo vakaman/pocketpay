@@ -15,11 +15,13 @@ use App\Domain\ValueObject\Uuid;
  */
 interface WalletServiceInterface
 {
-    function all(Person $person): Wallets;
+    public function all(Person $person): Wallets;
 
     public function main(Person $person): Wallet;
 
     public function create(Person $person): Wallet;
+
+    public function delete(Wallet $person): void;
 
     public function setMain(Wallet $wallet): bool;
 

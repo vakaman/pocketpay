@@ -31,6 +31,13 @@ class WalletController extends Controller
         return response()->json($wallet->toArray(), StatusCode::CREATED->value);
     }
 
+    public function delete(string $id): Response
+    {
+        $this->walletService->delete(new Wallet(id: $id));
+
+        return response()->noContent(StatusCode::NO_CONTENT->value);
+    }
+
     public function all(string $person): JsonResponse
     {
         $allWallets = new Wallets(

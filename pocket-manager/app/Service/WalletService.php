@@ -41,6 +41,11 @@ class WalletService implements WalletServiceInterface
         return $this->walletRepository->create($person, $this->hasMainWallet($person));
     }
 
+    public function delete(Wallet $wallet): void
+    {
+        $this->walletRepository->delete($wallet);
+    }
+
     public function setMain(Wallet $wallet): bool
     {
         $this->walletsExists(new Wallets([$wallet]));
