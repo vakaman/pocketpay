@@ -13,6 +13,7 @@ use App\Infrastructure\Http\Entity\StatusCode;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -79,6 +80,12 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'error' => $e->getMessage(),
                 'request' => $request->all()
+            ], StatusCode::FORBIDDEN->value);
+        });
+
+        $this->renderable(function (ValidationException $e) {
+            return response()->json([
+                'error' => $e->getMessage()
             ], StatusCode::FORBIDDEN->value);
         });
 
