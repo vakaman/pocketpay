@@ -2,8 +2,6 @@
 
 namespace App\Domain\ValueObject;
 
-use Ramsey\Uuid\Exception\InvalidUuidStringException;
-
 class Uuid
 {
     public string $value;
@@ -16,7 +14,7 @@ class Uuid
     private function verifyUuid(string $uuid): string
     {
         if (!isUuid($uuid)) {
-            throw new InvalidUuidStringException('Inválid Uuid value, uuid: ' . $uuid);
+            throw new \Exception('Inválid Uuid value, uuid: ' . $uuid);
         }
 
         return $uuid;
