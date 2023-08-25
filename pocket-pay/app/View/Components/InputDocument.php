@@ -8,11 +8,6 @@ use Illuminate\View\Component;
 
 class InputDocument extends Component
 {
-    public function __construct()
-    {
-        //
-    }
-
     public function render(): View|Closure|string
     {
         return view('components.input-document');
