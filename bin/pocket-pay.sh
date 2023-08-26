@@ -69,3 +69,9 @@ if ! docker-compose -f "$dockercompose" exec "$containerapi" npm run build; then
     show "ERROR: An error occurred while build NPM packages"
     exit 1
 fi
+
+show "Publish livewire assets..."
+if ! docker-compose -f "$dockercompose" exec "$containerapi" php artisan livewire:publish --assets; then
+    show "ERROR: An error occurred while Publish livewire assets"
+    exit 1
+fi
