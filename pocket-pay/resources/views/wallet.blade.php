@@ -10,8 +10,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
 
-                <form class="rounded" method="POST"
-                    action="{{ route('pocket-manager.wallet.create') }}">
+                <form class="rounded" method="POST" action="{{ route('pocket-manager.wallet.create') }}">
 
                     @csrf
 
@@ -27,21 +26,20 @@
                     </div>
                 </form>
 
-                <x-alerts.success></x-alerts.success>
-
-                <x-alerts.error></x-alerts.error>
-
             </div>
         </div>
 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-6 z">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg flex flex-col justify-center items-center">
+            <div
+                class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg flex flex-col justify-center items-center">
 
                 @if (!empty($wallets))
-
-                <x-tables.wallets-list :wallets="$wallets"></x-tables.wallets-list>
+                    <x-tables.wallets-list :wallets="$wallets"></x-tables.wallets-list>
                 @endif
             </div>
         </div>
     </div>
 </x-app-layout>
+
+<x-alerts.success></x-alerts.success>
+<x-alerts.error></x-alerts.error>
