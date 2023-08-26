@@ -55,7 +55,6 @@ class PocketManagerService implements PocketManagerServiceInterface
             env('API_POCKET_MANAGER') . '/api/wallet/' . $wallet->id->value
         );
 
-        dd($response);
         if (!$response->noContent()) {
             throw new WalletCannotBeDeletedException($wallet);
         }
