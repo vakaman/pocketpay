@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Domain\Entity\People\Person;
+use App\Domain\Entity\People\Type;
 use App\Domain\Repository\PeopleRepositoryInterface;
 use App\Domain\ValueObject\Uuid;
 use Closure;
@@ -21,10 +23,13 @@ class LoggedUserSession
         if (auth()->check()) {
             $user = auth()->user();
 
+            $person = Person::new(
+                id: new Uuid($user->person()->first()->id),
+                type: new Type($user->person()->first()->type_id)
+            );
+
             Session::put([
-                'person' => $this->peopleRepository->get(
-                    new Uuid($user->person()->first()->id)
-                )
+                'person' => $person
             ]);
         }
 
