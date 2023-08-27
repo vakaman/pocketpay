@@ -1,7 +1,6 @@
 <table class="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
-            {{-- <th scope="col" class="px-6 py-3">ID</th> --}}
             <th scope="col" class="px-6 py-3">{{ __('Funds') }}</th>
             <th scope="col" class="px-6 py-3">{{ __('Main') }}</th>
         </tr>
@@ -9,9 +8,7 @@
     <tbody>
         @foreach ($wallets as $wallet)
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 group/item hover:bg-slate-950">
-                {{-- <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {{ $wallet->id->value }}
-                </td> --}}
+
                 <td class="px-6 py-4">{{ $wallet->money->toReal() }}</td>
                 <td class="px-6 py-4">
                     @if ($wallet->main === true)
@@ -20,7 +17,6 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                         </svg>
                     @endif
-
 
                     @if ($wallet->main === false && $wallet->money->toInt() === 0)
                         <form method="POST" action="{{ route('pocket-manager.wallet.delete') }}">
@@ -41,7 +37,6 @@
                             </button>
                         </form>
                     @endif
-
 
                 </td>
             </tr>
