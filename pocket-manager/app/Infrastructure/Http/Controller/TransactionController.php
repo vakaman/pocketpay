@@ -29,12 +29,14 @@ class TransactionController extends Controller
         return response()->json($transaction->toArray());
     }
 
-    public function history(string $person, string $wallet): JsonResponse
+    public function history(string $person, string $wallet = null): JsonResponse
     {
+        $wallet = is_string($wallet) ? new Uuid($wallet) : null;
+
         $transaction = new TransactionHistory(
             $this->transactionService->history(
                 new Person(new Uuid($person)),
-                new Uuid($wallet)
+                $wallet
             )
         );
 

@@ -38,8 +38,12 @@ class TransactionService implements TransactionServiceInterface
         return $transaction;
     }
 
-    public function history(Person $person, Uuid $wallet): TransactionHistory
+    public function history(Person $person, Uuid $wallet = null): TransactionHistory
     {
+        if (!$wallet) {
+            $wallet = ($this->walletService->main($person))->id;
+        }
+
         $this->walletService->needExists(new Wallet($wallet));
         $this->personService->needExists($person);
         $this->walletService->belongsToPerson($wallet, $person);
@@ -127,5 +131,4 @@ class TransactionService implements TransactionServiceInterface
             $transaction->value
         );
     }
-
 }

@@ -19,6 +19,7 @@ class TransactionHistory
             $transaction = Transaction::fromEntity($transaction);
             return [
                 "{$transaction['id']}" => [
+                    'status_id' => $transaction['status_id'],
                     'from' => $transaction['from'],
                     'to' => $transaction['to'],
                     'value' => $transaction['value'],

@@ -15,7 +15,7 @@ interface TransactionServiceInterface
 {
     public function detail(string $id): Transaction;
 
-    public function history(Person $person, Uuid $wallet): TransactionHistory;
+    public function history(Person $person, Uuid $wallet = null): TransactionHistory;
 
     public function createTransaction(Transaction $transaction): void;
 
