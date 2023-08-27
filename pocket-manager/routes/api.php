@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::get("/balance/{person}/{wallet}", [BalanceController::class, 'balance']);
 
 Route::get("/transaction/{id}", [TransactionController::class, 'detail']);
-Route::get("/transaction/history/{person}/{wallet}", [TransactionController::class, 'history']);
+Route::get("/transaction/history/{person}/{wallet?}", [TransactionController::class, 'history']);
 Route::post("/transaction", [TransactionController::class, 'transaction']);
 
 Route::post("/wallet", [WalletController::class, 'create']);
@@ -18,7 +18,6 @@ Route::get("/wallet/main/person/{person}", [WalletController::class, 'main']);
 Route::get("/wallet/all/person/{person}", [WalletController::class, 'all']);
 Route::patch("/wallet/main/{wallet}", [WalletController::class, 'setMain']);
 Route::patch("/wallet/funds/{wallet}/{money}", [WalletController::class, 'addFunds']);
-
 
 ################################################################################
 ########## MOCKS
