@@ -15,6 +15,7 @@ use App\Exceptions\Pocket\WalletCannotBeDeletedException;
 use App\Exceptions\Transaction\CantGetHistoryException;
 use App\Infrastructure\Http\Api\Mapper\Financial\TransactionHistory;
 use App\Infrastructure\Http\Api\Mapper\Pocket\CreateWallet;
+use App\Infrastructure\Http\Entity\StatusCode;
 use Illuminate\Support\Facades\Http;
 
 class PocketManagerService implements PocketManagerServiceInterface
@@ -63,7 +64,7 @@ class PocketManagerService implements PocketManagerServiceInterface
         }
     }
 
-    public function history(PersonAbstract $person): FinancialTransactionHistory
+    public function history(PersonAbstract $person): null|FinancialTransactionHistory
     {
         $url = sprintf(
             '%s%s%s',
@@ -74,12 +75,14 @@ class PocketManagerService implements PocketManagerServiceInterface
 
         $response = Http::get($url);
 
-        $transactionHistory = TransactionHistory::fromArray($response->json());
+        if ($response->status() === StatusCode::NOT_FOUND->value) {
+            return null;
+        }
 
         if (!$response->ok()) {
             throw new CantGetHistoryException($person);
         }
 
-        return $transactionHistory;
+        return TransactionHistory::fromArray($response->json());
     }
 }

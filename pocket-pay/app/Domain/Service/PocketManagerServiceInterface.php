@@ -18,5 +18,5 @@ interface PocketManagerServiceInterface
 
     public function walletDelete(Wallet $wallet): void;
 
-    public function history(PersonAbstract $person): FinancialTransactionHistory;
+    public function history(PersonAbstract $person): null|FinancialTransactionHistory;
 }

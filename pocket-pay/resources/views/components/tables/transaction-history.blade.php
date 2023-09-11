@@ -10,22 +10,29 @@
     </thead>
 
     <tbody>
-        @foreach ($transactions->values as $transaction)
+        @if (!empty($transactions->values))
+            @foreach ($transactions->values as $transaction)
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 group/item hover:bg-slate-950">
+
+                    <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        {{ $transaction->status->name }}
+                    </td>
+
+                    <td class="px-6 py-4">{{ $transaction->from->value }}</td>
+                    <td class="px-6 py-4">{{ $transaction->to->value }}</td>
+                    <td class="px-6 py-4">{{ $transaction->value->toReal() }}</td>
+                    <td class="px-6 py-4">{{ $transaction->createdAt->format('d/m/Y H:i') }}</td>
+
+                </tr>
+            @endforeach
+        @else
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 group/item hover:bg-slate-950">
-
-                <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {{ $transaction->status->name }}
-                </td>
-
-                <td class="px-6 py-4">{{ $transaction->from->value }}</td>
-
-                <td class="px-6 py-4">{{ $transaction->to->value }}</td>
-
-                <td class="px-6 py-4">{{ $transaction->value->toReal() }}</td>
-
-                <td class="px-6 py-4">{{ $transaction->createdAt->format('d/m/Y H:i') }}</td>
-
+                <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"></td>
+                <td class="px-6 py-4"></td>
+                <td class="px-6 py-4"></td>
+                <td class="px-6 py-4"></td>
+                <td class="px-6 py-4"></td>
             </tr>
-        @endforeach
+        @endif
     </tbody>
 </table>
