@@ -48,8 +48,7 @@ services:
             - ./pocket-notifyer:/app
         depends_on:
             - pocketpay-notifyer-queue
-            - pocketpay-manager-database
-                - condition=service_healthy
+            - pocketpay-notifyer-database
         env_file:
             - pocket-notifyer/.env
 
@@ -73,8 +72,7 @@ services:
             - pocket-notifyer/.env
         depends_on:
             - pocketpay-notifyer-queue
-            - pocketpay-manager-database
-                - condition=service_healthy
+            - pocketpay-notifyer-database
         command: php artisan queue:work
 
     pocketpay-notifyer-mailhog:
