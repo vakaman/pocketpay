@@ -30,7 +30,7 @@ class Transaction
         ?Carbon $updatedAt = null,
     ) {
         $this->id = $id ?? new Uuid(uuidGenerate());
-        $this->status = $status ?? TransactionStatusEnum::PENDINIG->value;
+        $this->status = $status ?? TransactionStatusEnum::PENDING->value;
         $this->from = $from;
         $this->to = $to;
         $this->value = $value;

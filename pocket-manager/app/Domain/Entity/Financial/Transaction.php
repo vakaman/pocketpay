@@ -30,7 +30,7 @@ class Transaction
         ?Carbon $updatedAt = null,
         int $status = null
     ) {
-        $this->status = $status ?? TransactionStatusEnum::PENDINIG->value;
+        $this->status = $status ?? TransactionStatusEnum::PENDING->value;
         $this->from = $from;
         $this->to = $to;
         $this->value = $value;
