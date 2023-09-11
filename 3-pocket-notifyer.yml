@@ -92,7 +92,6 @@ services:
         image: rabbitmq:3.12.2-management-alpine
         container_name: pocketpay-notifyer-queue
         hostname: pocketpay-notifyer-queue
-        container_name: pocketpay-notifyer-queue
         restart: "on-failure"
         env_file:
             - pocket-notifyer/.env

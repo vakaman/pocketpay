@@ -105,7 +105,6 @@ services:
         image: rabbitmq:3.12.2-management-alpine
         container_name: pocketpay-manager-queue
         hostname: pocketpay-manager-queue
-        container_name: pocketpay-manager-queue
         restart: "on-failure"
         env_file:
             - pocket-manager/.env
