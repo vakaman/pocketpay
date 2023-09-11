@@ -63,11 +63,11 @@ cd bin
 https://pocketpay.com.br
 
 ## Queues
-http://pocketpay.notifyer.localhost:8025/
-http://pocketpay.notifyer.localhost:833/
+http://pocketpay.manager.localhost:822
+http://pocketpay.notifyer.localhost:833
 
 ## Email
-http://pocketpay.notifyer.localhost:8025/
+http://pocketpay.notifyer.localhost:8025
 ```
 
 ## Software System diagram
